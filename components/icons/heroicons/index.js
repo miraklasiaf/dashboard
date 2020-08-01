@@ -1,0 +1,12 @@
+export { default as Home } from './home';
+export { default as Menu } from './menu';
+export { default as Mail } from './mail';
+export { default as Sun } from './sun';
+export { default as Moon } from './moon';
+export { default as Folder } from './folder';
+export { default as Inbox } from './inbox';
+export { default as Calendar } from './calendar';
+export { default as Template } from './template';
+export { default as UserGroup } from './user-group';
+export { default as ChartSquareBar } from './chart-square-bar';
+export { default as ClipboardList } from './clipboard-list';
