@@ -2,7 +2,7 @@ import { getLayout } from '@/layouts/dashboard';
 
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, logout } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 
 import Router from 'next/router'
@@ -40,9 +40,6 @@ function Dashboard() {
             Logged in as
             <div>{name}</div>
             <div>{user?.email}</div>
-            <button className="dashboard__btn" onClick={logout}>
-              Logout
-            </button>
           </div>
         </div>
       );

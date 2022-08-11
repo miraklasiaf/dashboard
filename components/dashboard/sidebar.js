@@ -7,6 +7,7 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Button,
   VStack,
   useColorModeValue
 } from '@chakra-ui/react';
@@ -24,6 +25,9 @@ import {
   ClipboardList
 } from '../icons';
 
+import { logout } from "../../firebase/firebase";
+
+
 const SidebarLink = ({ href, children, icon }) => (
   <NavLink href={href}>
     <Flex align="center">
@@ -34,6 +38,7 @@ const SidebarLink = ({ href, children, icon }) => (
     </Flex>
   </NavLink>
 );
+
 
 function PageLinks() {
   return (
@@ -75,6 +80,7 @@ function SidebarContainer(props) {
 }
 
 export default function Sidebar(props) {
+
   const bgColor = useColorModeValue('white', 'gray.800');
 
   return (

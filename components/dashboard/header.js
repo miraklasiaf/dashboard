@@ -1,6 +1,7 @@
 import NextLink from 'next/link';
-import { Button, Flex, useColorModeValue } from '@chakra-ui/react';
+import { Button, Flex, useColorModeValue, HStack } from '@chakra-ui/react';
 import ThemeToggle from '../theme-toggle';
+import ProfileOptions from '../profile-options';
 import MobileNav from './mobile-nav';
 import { MY_APP } from '@/utils/constants';
 
@@ -29,10 +30,15 @@ export default function Header() {
               </Button>
             </NextLink>
           </Flex>
+
           <Flex>
-            <ThemeToggle mr={`-${3}`} />
+            <HStack spacing="1em">
+              <ThemeToggle mr={`-${3}`} />
+              <ProfileOptions mr={`-${3}`}/>
+            </HStack>
             <MobileNav />
           </Flex>
+
         </Flex>
       </Flex>
     </Flex>
