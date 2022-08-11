@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/core';
+import { Box } from '@chakra-ui/react';
 
 const UserGroup = (props) => (
   <Box as="svg" fill="currentColor" viewBox="0 0 20 20" {...props}>

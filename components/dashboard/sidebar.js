@@ -9,7 +9,7 @@ import {
   AccordionIcon,
   VStack,
   useColorModeValue
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { NavLink } from './nav-link';
 import {
   Home,

@@ -1,5 +1,5 @@
 import React, { cloneElement, forwardRef } from 'react';
-import { Box, Flex, useColorModeValue } from '@chakra-ui/core';
+import { Box, Flex, useColorModeValue } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 

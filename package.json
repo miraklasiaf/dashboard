@@ -8,13 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
-    "@chakra-ui/core": "^1.0.0-rc.0",
-    "@chakra-ui/theme": "^1.0.0-rc.0",
-    "@chakra-ui/theme-tools": "^1.0.0-rc.0",
+    "@chakra-ui/react": "^2.2.4",
+    "@chakra-ui/theme": "2.1.5",
+    "@chakra-ui/theme-tools": "2.0.7",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "framer-motion": "^6.2.6",
     "lodash.debounce": "^4.0.8",
-    "next": "9.5.4",
+    "next": "^12.2.0",
     "nprogress": "^0.2.0",
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

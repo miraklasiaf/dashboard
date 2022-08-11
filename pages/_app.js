@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChakraProvider, CSSReset } from '@chakra-ui/core';
+import { ChakraProvider, CSSReset } from '@chakra-ui/react';
 import Nprogress from '@/components/nprogress';
 import theme from '@/components/design-system';
 import DefaultLayout from '@/layouts/default';

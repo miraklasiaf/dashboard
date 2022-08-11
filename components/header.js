@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { useColorModeValue, Button, Flex } from '@chakra-ui/core';
+import { useColorModeValue, Button, Flex } from '@chakra-ui/react';
 import ThemeToggle from './theme-toggle';
 import { MY_APP } from '@/utils/constants';
 

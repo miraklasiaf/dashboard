@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/core';
+import { Box } from '@chakra-ui/react';
 
 const LogoMark = (props) => (
   <Box as="svg" fill="none" viewBox="0 0 35 32" {...props}>
