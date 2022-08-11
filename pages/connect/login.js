@@ -74,6 +74,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
                   align={'start'}
                   justify={'space-between'}>
                   <Link href={"/connect/reset"} color={'blue.400'}>Forgot password?</Link>
+                  <Link href={"/connect/register"} color={'blue.400'}>Need a account?</Link>
                 </Stack>
                 <Button
                   onClick={() => logInWithEmailAndPassword(email, password)}

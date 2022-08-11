@@ -12,8 +12,22 @@ import {
     Text,
     useColorModeValue,
   } from '@chakra-ui/react';
-  
-  export default function SimpleCard() {
+
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, sendPasswordReset } from "../../firebase/firebase";
+import Router from 'next/router'
+
+
+function Reset() {
+  const [email, setEmail] = useState("");
+  const [user, loading, error] = useAuthState(auth);
+
+  useEffect(() => {
+    if (loading) return;
+    if (user) {Router.push('/dashboard')};
+  }, [user, loading]);
+
     return (
       <Flex
         minH={'100vh'}
@@ -35,10 +49,15 @@ import {
             <Stack spacing={4}>
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
-                <Input type="email" />
+                <Input 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </FormControl>
               <Stack spacing={10}>
                 <Button
+                  onClick={() => sendPasswordReset(email)}
                   bg={'blue.400'}
                   color={'white'}
                   _hover={{
@@ -53,3 +72,5 @@ import {
       </Flex>
     );
   }
+
+export default Reset;

@@ -5,7 +5,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, logout } from "../firebase/firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 
-import {Link as _link} from 'next/link'
 import Router from 'next/router'
 
 
