@@ -22,10 +22,13 @@ import {
   LogoMark,
   LogoOnDark,
   Template,
-  ClipboardList
+  ClipboardList,
+  Rocketship
 } from '../icons';
 
 import { logout } from "../../firebase/firebase";
+
+
 
 
 const SidebarLink = ({ href, children, icon }) => (
@@ -89,14 +92,14 @@ export default function Sidebar(props) {
         <Flex boxSize="full" align="center" px={3}>
           <Flex boxSize="full" align="center">
             <Box
-              as={LogoMark}
+              as={Rocketship}
               h={8}
               w="auto"
               display={{ base: 'block', lg: 'none' }}
             />
 
             <Box
-              as={LogoOnDark}
+              as={Rocketship}
               h={8}
               w="auto"
               display={{ base: 'none', lg: 'block' }}

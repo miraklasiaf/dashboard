@@ -1,7 +1,23 @@
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/firebase";
+import Router from 'next/router'
 import { getLayout } from '@/layouts/dashboard';
 
-const DashboardReports = () => <div>Reports</div>;
+function Reports() {
+    const [user, loading, error] = useAuthState(auth);
 
-DashboardReports.getLayout = getLayout;
+    useEffect(() => {
+        if (loading) return;
+        if (!user) {Router.push('/connect/login')};
+      }, [user, loading]);
 
-export default DashboardReports;
+      return (
+        <div>
+            Logged in and viewing the reports page ...
+        </div>
+      );
+    }
+
+Reports.getLayout = getLayout;
+export default Reports;

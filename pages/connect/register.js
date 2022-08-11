@@ -55,7 +55,7 @@ function Register() {
               Sign up
             </Heading>
             <Text fontSize={'lg'} color={'gray.600'}>
-              to enjoy all of our cool features ✌️
+              to enjoy all of our cool <Link color={'blue.400'} href={"/"}>features</Link> ✌️
             </Text>
           </Stack>
           <Box
