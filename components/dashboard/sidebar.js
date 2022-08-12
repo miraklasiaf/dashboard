@@ -49,8 +49,8 @@ function PageLinks() {
       <SidebarLink href="/dashboard" icon={Home}>
         Dashboard
       </SidebarLink>
-      <SidebarLink href="/dashboard/upload" icon={ChartSquareBar}>
-        Upload
+      <SidebarLink href="/dashboard/uploader" icon={ChartSquareBar}>
+        Uploader
       </SidebarLink>
       <SidebarLink href="/dashboard/team" icon={UserGroup}>
         Team
