@@ -21,6 +21,15 @@ import {
     TableContainer,
   } from '@chakra-ui/react'
 
+import {
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+    useDisclosure,
+  } from '@chakra-ui/react'
 
 
 
@@ -34,6 +43,10 @@ const UploadFiles = () => {
     const [user, loading, error] = useAuthState(auth);
     const [name, setName] = useState("");    
   
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = React.useRef()
+
     useEffect(() => {
         if (loading) return;
         if (!user) {Router.push('/connect/login')};
@@ -74,13 +87,21 @@ const UploadFiles = () => {
     }
 
 
+
+
+
+
+
+
     const upload = (idx, file) => {
       let _progressInfos = [...progressInfosRef.current.val];
-      // check if file has any special characters or white space, if it does throw an error 
-      if (/[^a-zA-Z0-9]/.test(file.name)) {
+
+      // check if file has any special characters other then a _ and a ., if it does throw an error 
+      if (file.name.match(/[^a-zA-Z0-9_.]/)) {
         console.log(["Please remove all white space and special characters and try again"]);
-        return ( (alert('Please remove all white space and special characters and try again')));
+        return ( (alert('Please remove all white space and special characters and try again')));      
       }
+
       return uploadFile(file, (event) => {
         // check for special characters or whitespace in the filename, replace them with an underscore
         _progressInfos[idx].percentage = Math.round(
@@ -192,7 +213,7 @@ const UploadFiles = () => {
                             <Tr key={index}>
                                 <Td>{fileInfo.name.split('.')[0]}</Td>
                                 <Td>{fileInfo.name.split('.')[1]}</Td>
-                                <Td> <Button onClick={() => deleteButton(fileInfo.name)}> Delete: {fileInfo.name} </Button></Td>
+                                <Td> <Button colorScheme='red' onClick={() => deleteButton(fileInfo.name)}> Delete: {fileInfo.name} </Button></Td>
                                 <Td> <Button> <a href={fileInfo.url}> Download</a> </Button></Td>
                             </Tr>
                         ))}
