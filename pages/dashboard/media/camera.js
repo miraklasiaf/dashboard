@@ -118,7 +118,7 @@ export default function CameraApp() {
 
   const GoToMedia = () => {
     onClose();
-    Router.push('/dashboard/uploader');
+    Router.push('/dashboard/media');
   }
 
   const DisregardPhoto = () => {
@@ -127,7 +127,7 @@ export default function CameraApp() {
   }
 
   const ExitCancel = () => {
-    Router.push('/dashboard/uploader');
+    Router.push('/dashboard/media');
   }
 
 

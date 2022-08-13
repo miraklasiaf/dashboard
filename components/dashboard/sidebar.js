@@ -49,11 +49,11 @@ function PageLinks() {
       <SidebarLink href="/dashboard" icon={Home}>
         Dashboard
       </SidebarLink>
-      <SidebarLink href="/dashboard/uploader" icon={ChartSquareBar}>
-        Uploader
+      <SidebarLink href="/dashboard/media" icon={ChartSquareBar}>
+        Media
       </SidebarLink>
-      <SidebarLink href="/dashboard/team" icon={UserGroup}>
-        Team
+      <SidebarLink href="/dashboard/create" icon={UserGroup}>
+        Create
       </SidebarLink>
       <SidebarLink href="/dashboard/projects" icon={Folder}>
         Projects

@@ -9,9 +9,6 @@ import { Flex, Input, Button, Stack, Alert, AlertIcon, Heading, useDisclosure, A
 import { Progress } from '@chakra-ui/react'
 import { Divider } from '@chakra-ui/react'
 
-import AlertDialogExample from '../../components/dashboard/uploader/alertDialogDelete'
-import AlertTemplate from '../../components/dashboard/uploader/alertDialogTemplate'
-
 import {
     Table,
     Thead,
@@ -151,7 +148,7 @@ const UploadFiles = () => {
 
 
     const GotoCamera = () => {
-      Router.push('/dashboard/uploader/camera')
+      Router.push('/dashboard/media/camera')
     }
   
     return (
@@ -197,7 +194,7 @@ const UploadFiles = () => {
               </Button>
           </GridItem>
           <GridItem h='10'>
-            <Button onClick={() => Router.push('/dashboard/uploader/audio')}>
+            <Button onClick={() => Router.push('/dashboard/media/audio')}>
                 Record audio!
               </Button>
           </GridItem>

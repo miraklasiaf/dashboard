@@ -84,7 +84,7 @@ export default function AudioCapture() {
 
     const GoToMedia = () => {
         onClose();
-        Router.push('/dashboard/uploader');
+        Router.push('/dashboard/media');
       }
 
     const TakeAnotherAudio = () => {
@@ -94,7 +94,7 @@ export default function AudioCapture() {
 
     const backToMedia = () => {
         onClose();
-        Router.push('/dashboard/uploader');
+        Router.push('/dashboard/media');
     }
     
   return (

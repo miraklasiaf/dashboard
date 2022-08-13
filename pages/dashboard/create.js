@@ -14,7 +14,7 @@ function Team() {
 
       return (
         <div>
-            Logged in and viewing the team page ...
+            Create page
         </div>
       );
     }
