@@ -5,9 +5,12 @@ import { auth } from "../../firebase/firebase";
 import { getLayout } from '@/layouts/dashboard';
 import Router from 'next/router'
 
-import { Flex, Input, Button, Stack, Alert, AlertIcon, Heading } from '@chakra-ui/react'
+import { Flex, Input, Button, Stack, Alert, AlertIcon, Heading, useDisclosure, Avatar } from '@chakra-ui/react'
 import { Progress } from '@chakra-ui/react'
 import { Divider } from '@chakra-ui/react'
+
+import AlertDialogExample from '../../components/dashboard/uploader/alertDialogDelete'
+import AlertTemplate from '../../components/dashboard/uploader/alertDialogTemplate'
 
 import {
     Table,
@@ -21,17 +24,8 @@ import {
     TableContainer,
   } from '@chakra-ui/react'
 
-import {
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogContent,
-    AlertDialogOverlay,
-    useDisclosure,
-  } from '@chakra-ui/react'
 
-
+import { Grid, GridItem } from '@chakra-ui/react'
 
 
 const UploadFiles = () => {
@@ -43,9 +37,6 @@ const UploadFiles = () => {
     const [user, loading, error] = useAuthState(auth);
     const [name, setName] = useState("");    
   
-
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const cancelRef = React.useRef()
 
     useEffect(() => {
         if (loading) return;
@@ -73,7 +64,7 @@ const UploadFiles = () => {
 
 
     const deleteButton = (rowName) => {
-      console.log(rowName);
+      console.log('Button action: row to delete', rowName);
       return deleteFile(rowName).then((response) => {
         setMessage(response.data);
       }).catch((error) => {
@@ -86,11 +77,22 @@ const UploadFiles = () => {
       );
     }
 
-
-
-
-
-
+    const PreviewFile = (rowUrl) => {
+      // check if rowName contains a .jpg .jpeg .png .gif extension and if it does, use the avatar component
+      if (rowUrl.includes('.jpg') || rowUrl.includes('.jpeg') || rowUrl.includes('.png') || rowUrl.includes('.gif')) {
+        return (
+          <Avatar src={rowUrl} size='lg'/>
+        )
+      }
+      // if it is .wav or .mp3, use the audio component
+      else if (rowUrl.includes('.wav') || rowUrl.includes('.mp3')) {
+        return (
+          <audio controls>
+            <source src={rowUrl} type="audio/wav"/>
+          </audio>
+        )
+      }
+    }
 
 
     const upload = (idx, file) => {
@@ -145,6 +147,12 @@ const UploadFiles = () => {
   
       setMessage([]);
     };
+
+
+
+    const GotoCamera = () => {
+      Router.push('/dashboard/uploader/camera')
+    }
   
     return (
       <div>
@@ -177,10 +185,19 @@ const UploadFiles = () => {
                             ))}
 
 
+        <Grid gap={4}>
+          <GridItem>
+            <Button onClick={uploadFilesFunction} disabled={!selectedFiles} mt='25'>
+              Upload
+            </Button>
+          </GridItem>
+          <GridItem>
+            <Button onClick={GotoCamera}>
+              Or take a selfie!
+            </Button>
+          </GridItem>
+        </Grid>
 
-        <Button onClick={uploadFilesFunction} disabled={!selectedFiles} mt='25'>
-            Upload
-        </Button>
 
         {message.length > 0 && (
             <Stack spacing={3}>
@@ -194,7 +211,7 @@ const UploadFiles = () => {
             </Stack>
         )}
 
-        <Heading as='h5' mt='50'> Uploaded files </Heading>
+        <Heading as='h5' mt='50'> Media files </Heading>
 
         <Flex>
             <TableContainer mt='50'>
@@ -204,8 +221,9 @@ const UploadFiles = () => {
                     <Tr>
                         <Th>File name</Th>
                         <Th>Extension</Th>
-                        <Th>Action</Th>
-                        <Th>File link</Th>
+                        <Th>Preview </Th>
+                        <Th>Download</Th>
+                        <Th>Actions</Th>
                     </Tr>
                     </Thead>
                     <Tbody>
@@ -213,8 +231,9 @@ const UploadFiles = () => {
                             <Tr key={index}>
                                 <Td>{fileInfo.name.split('.')[0]}</Td>
                                 <Td>{fileInfo.name.split('.')[1]}</Td>
-                                <Td> <Button colorScheme='red' onClick={() => deleteButton(fileInfo.name)}> Delete: {fileInfo.name} </Button></Td>
+                                <Td> {PreviewFile(fileInfo.url)} </Td>
                                 <Td> <Button> <a href={fileInfo.url}> Download</a> </Button></Td>
+                                <Td> <Button colorScheme='red' onClick={() => deleteButton(fileInfo.name)}> Delete </Button></Td>
                             </Tr>
                         ))}
                     </Tbody>
