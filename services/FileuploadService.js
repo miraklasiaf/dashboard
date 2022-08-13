@@ -25,6 +25,11 @@ export const getFiles = () => {
   return http.get("/files");
 };
 
+export const getFileSingle = (fileName) => {
+  let endpoint = "/files/" + fileName;
+  return http.get(endpoint);
+};
+
 export const deleteFile = (fileName) => {
     let endpoint = "/files/" + fileName
     return http.delete(endpoint);
