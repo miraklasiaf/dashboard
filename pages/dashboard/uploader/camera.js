@@ -94,13 +94,8 @@ export default function CameraApp() {
   };
 
 
-
-  
-
-
   const handleSavePhoto = async () => {
     const blob = await (await fetch(photo)).blob()
-    // file name is the current time with extension .jpg
     const fileName = new Date().getTime() + ".jpg";
     const file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});
     try 
@@ -118,6 +113,7 @@ export default function CameraApp() {
   const TakeAnotherPhoto = () => {
     onClose();
     handleResetPhoto();
+    setUseCamera(true);
   }
 
   const GoToMedia = () => {
@@ -125,6 +121,14 @@ export default function CameraApp() {
     Router.push('/dashboard/uploader');
   }
 
+  const DisregardPhoto = () => {
+    handleResetPhoto();
+    setUseCamera(true);
+  }
+
+  const ExitCancel = () => {
+    Router.push('/dashboard/uploader');
+  }
 
 
   return (
@@ -167,8 +171,8 @@ export default function CameraApp() {
         <div>
           <Grid templateColumns='repeat(5, 1fr)' gap={1} >
             <GridItem> 
-              <Button onClick={handleResetPhoto}>
-                Change Photo
+              <Button onClick={DisregardPhoto}>
+                Try Again
               </Button> 
             </GridItem>
             <GridItem> 
@@ -213,7 +217,7 @@ export default function CameraApp() {
 
 
       {isUseCamera && (
-        <Button className="bg-gray-200 p-2" onClick={() => setUseCamera(false)}>
+        <Button className="bg-gray-200 p-2" onClick={ExitCancel}>
           Cancel camera
         </Button>
       )}

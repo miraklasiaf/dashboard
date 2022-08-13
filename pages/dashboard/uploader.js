@@ -185,16 +185,21 @@ const UploadFiles = () => {
                             ))}
 
 
-        <Grid gap={4}>
-          <GridItem>
-            <Button onClick={uploadFilesFunction} disabled={!selectedFiles} mt='25'>
+        <Grid templateColumns='repeat(5, 1fr)' gap={0} mt='5'>
+          <GridItem h='10' >
+            <Button onClick={uploadFilesFunction} disabled={!selectedFiles}>
               Upload
             </Button>
           </GridItem>
-          <GridItem>
+          <GridItem h='10' >
             <Button onClick={GotoCamera}>
-              Or take a selfie!
-            </Button>
+                Take a selfie!
+              </Button>
+          </GridItem>
+          <GridItem h='10'>
+            <Button onClick={() => Router.push('/dashboard/uploader/audio')}>
+                Record audio!
+              </Button>
           </GridItem>
         </Grid>
 
