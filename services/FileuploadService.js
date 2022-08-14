@@ -25,6 +25,10 @@ export const getFiles = () => {
   return http.get("/files");
 };
 
+export const getFilesProcessed = () => {
+  return http.get("/files/processed");
+};
+
 export const getFileSingle = (fileName) => {
   let endpoint = "/files/" + fileName;
   return http.get(endpoint);

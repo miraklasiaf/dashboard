@@ -24,6 +24,8 @@
     "react-firebase-hooks": "^5.0.3",
     "react-hook-form": "^7.34.0",
     "axios": "^0.27.2",
-    "react-html5-camera-photo": "^1.5.10"
+    "react-html5-camera-photo": "^1.5.10",
+    "react-audio-player": "^0.17.0",
+    "react-player": "^2.10.1"
   }
 }
