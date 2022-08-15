@@ -55,8 +55,8 @@ function PageLinks() {
       <SidebarLink href="/dashboard/create" icon={UserGroup}>
         Create
       </SidebarLink>
-      <SidebarLink href="/dashboard/review" icon={Folder}>
-        Review
+      <SidebarLink href="/dashboard/processed" icon={Folder}>
+        Processed
       </SidebarLink>
       <SidebarLink href="/dashboard/projects" icon={Folder}>
         Projects

@@ -1,7 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Button, Grid, GridItem } from "@chakra-ui/react";
-import { uploadFileSimple } from "../../../services/FileuploadService";
+// import { uploadFileSimple } from "../../../services/FileuploadService";
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, storage } from "../../../firebase/firebase";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 import Router from 'next/router'
 
@@ -15,16 +19,30 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 
+import { Progress } from '@chakra-ui/react'
 
 export default function AudioCapture() {
 
+    const [user, loading, error] = useAuthState(auth);
     const [audioURL, setAudioURL] = useState("");
     const [isRecording, setIsRecording] = useState(false);
     const [recorder, setRecorder] = useState(null);
     const [audioBlobWav, setAudioBlobWav] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef()
+    const [progresspercent, setProgresspercent] = useState(0);
+    const [uploadFileName, setUploadFileName] = useState(null);
 
+    const [firebaseUrl, setFirebaseUrl] = useState(null);
+    const [firebaseUserId, setFirebaseUserId] = useState(null);
+
+    useEffect(() => {
+      if (loading) return;
+      if (!user) {Router.push('/connect/login')};
+      // get user id from firebase auth
+      setFirebaseUserId(user.uid);
+      console.log('user id', user.uid);
+    }, [user, loading]);
 
     useEffect(() => {
         // Lazily obtain recorder first time we're recording.
@@ -47,6 +65,7 @@ export default function AudioCapture() {
           setAudioURL(URL.createObjectURL(e.data));
           // get date+time
           const fileName = new Date().getTime() + ".wav";
+          setUploadFileName(fileName);
           setAudioBlobWav(new File([e.data], fileName, { type : 'audio/wav; codecs=0' }));
         };
     
@@ -60,20 +79,41 @@ export default function AudioCapture() {
         return new MediaRecorder(stream);
       }
     
+    // // this is saving locally 
+    // const saveAudio = async () => {
+    // try 
+    //     {
+    //         const result = await uploadFileSimple(audioBlobWav);
+    //         console.log(result);
+    //         onOpen();
+    //     }
+    //         catch (error) {
+    //         console.log(error);
+    //     }
+    // };
     
-    const saveAudio = async () => {
-    try 
-        {
-            const result = await uploadFileSimple(audioBlobWav);
-            console.log(result);
-            onOpen();
-        }
-            catch (error) {
-            console.log(error);
-        }
+    const saveAudioFirebase = async () => {
+      const storageRef = ref(storage, `user/${firebaseUserId}/${uploadFileName}`);
+      const uploadTask = uploadBytesResumable(storageRef, audioBlobWav);
+      uploadTask.on("state_changed",
+      (snapshot) => {
+        const progress =
+          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setProgresspercent(progress);
+      },
+      (error) => {
+        alert(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFirebaseUrl(downloadURL)
+        });
+      }
+    );
+    onOpen();
     };
-    
-    
+
+
     const startRecording = () => {
         setIsRecording(true);
     };
@@ -89,6 +129,7 @@ export default function AudioCapture() {
 
     const TakeAnotherAudio = () => {
         setAudioURL("");
+        setFirebaseUrl(null);
         onClose();
     }
 
@@ -114,7 +155,7 @@ export default function AudioCapture() {
                 </Button>
             </GridItem>
             <GridItem>
-                <Button onClick={saveAudio} disabled={!audioURL}> 
+                <Button onClick={saveAudioFirebase} disabled={!audioURL}> 
                     save recording
                 </Button>
             </GridItem>
@@ -152,6 +193,29 @@ export default function AudioCapture() {
             </AlertDialogContent>
             </AlertDialogOverlay>
         </AlertDialog>
+
+
+
+      {
+        firebaseUrl &&
+          <div>
+            <Progress
+                value={progresspercent}
+                size="xs"
+                aria-valuenow={progresspercent}
+                colorScheme='pink'
+            />
+            {progresspercent}%
+          </div>
+      }
+
+      {
+        firebaseUrl &&
+        <p> Uploaded file link: {firebaseUrl} </p>
+      }
+
+
+
 
 
 

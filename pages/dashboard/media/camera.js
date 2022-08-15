@@ -2,13 +2,15 @@ import { useEffect, useState, useRef } from "react";
 import Camera from "../../../services/Camera";
 import { getImageSize } from "../../../utils/image";
 
-import { Button, Center } from '@chakra-ui/react'
-import { Grid, GridItem } from '@chakra-ui/react'
+import { Grid, GridItem, Button, Center, Progress } from '@chakra-ui/react'
 
-import { uploadFileSimple } from "../../../services/FileuploadService";
+// import { uploadFileSimple } from "../../../services/FileuploadService";
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, storage } from "../../../firebase/firebase";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 import React from "react";
-
 import Router from 'next/router'
 
 import {
@@ -32,6 +34,8 @@ const colorScheme = [
 ];
 
 export default function CameraApp() {
+
+  const [user, loading, error] = useAuthState(auth);
   const [isUseCamera, setUseCamera] = useState(false);
   const [photo, setPhoto] = useState(null);
   const [result, setResult] = useState(null);
@@ -41,6 +45,19 @@ export default function CameraApp() {
   const [imageSize, setImageSize] = useState({ width: 300, height: 100 });
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
+
+  const [progresspercent, setProgresspercent] = useState(0);
+  const [firebaseUrl, setFirebaseUrl] = useState(null);
+  const [firebaseUserId, setFirebaseUserId] = useState(null);
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user) {Router.push('/connect/login')};
+    // get user id from firebase auth
+    setFirebaseUserId(user.uid);
+    console.log('user id', user.uid);
+  }, [user, loading]);
+
 
   useEffect(() => {
     if (refPhoto?.current) {
@@ -94,19 +111,45 @@ export default function CameraApp() {
   };
 
 
-  const handleSavePhoto = async () => {
+  // const handleSavePhoto = async () => {
+  //   const blob = await (await fetch(photo)).blob()
+  //   const fileName = new Date().getTime() + ".jpg";
+  //   const file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});
+  //   try 
+  //     {
+  //       const result = uploadFileSimple(file);
+  //       console.log(result);
+  //       onOpen();
+  //     }
+  //     catch (error) {
+  //       console.log(error);
+  //     }
+  // };
+
+
+
+  const handleSavePhotoFirebase = async () => {
     const blob = await (await fetch(photo)).blob()
     const fileName = new Date().getTime() + ".jpg";
     const file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});
-    try 
-      {
-        const result = uploadFileSimple(file);
-        console.log(result);
-        onOpen();
-      }
-      catch (error) {
-        console.log(error);
-      }
+    const storageRef = ref(storage, `user/${firebaseUserId}/${fileName}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on("state_changed",
+    (snapshot) => {
+      const progress =
+        Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      setProgresspercent(progress);
+    },
+    (error) => {
+      alert(error);
+    },
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        setFirebaseUrl(downloadURL)
+      });
+    }
+  );
+  onOpen();
   };
 
 
@@ -176,7 +219,7 @@ export default function CameraApp() {
               </Button> 
             </GridItem>
             <GridItem> 
-              <Button onClick={handleSavePhoto}>
+              <Button onClick={handleSavePhotoFirebase}>
               Save photo
               </Button>
             </GridItem>
@@ -223,6 +266,25 @@ export default function CameraApp() {
       )}
 
 
+
+
+      {
+        firebaseUrl &&
+          <div>
+            <Progress
+                value={progresspercent}
+                size="xs"
+                aria-valuenow={progresspercent}
+                colorScheme='pink'
+            />
+            {progresspercent}%
+          </div>
+      }
+
+      {
+        firebaseUrl &&
+        <p> Uploaded file link: {firebaseUrl} </p>
+      }
 
 
 

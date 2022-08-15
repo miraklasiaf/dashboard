@@ -38,3 +38,6 @@ export const deleteFile = (fileName) => {
     let endpoint = "/files/" + fileName
     return http.delete(endpoint);
 };
+
+
+
