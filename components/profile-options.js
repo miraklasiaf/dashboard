@@ -12,10 +12,20 @@ import {
 
 import { ArrowRightIcon, SettingsIcon } from '@chakra-ui/icons'
 import { Menu } from './icons';
+import { useRouter } from 'next/router';
 
-import { logout } from "../firebase/firebase";
+import React, { useEffect } from "react";
+import { useAuthUserContext } from '../context/AuthUserContext';
 
 export default function ProfileOptions() {
+
+  const Router = useRouter();
+  const { logOut } = useAuthUserContext();
+
+  const goToProfile = () => {
+    Router.push('/dashboard');
+  }
+
   return (
     /**
      * You may move the Popover outside Flex.
@@ -35,6 +45,7 @@ export default function ProfileOptions() {
           <PopoverBody>
             <Stack>
               <Button
+                onClick={goToProfile}
                 w="194px"
                 variant="ghost"
                 rightIcon={<ArrowRightIcon h={5} />}
@@ -71,7 +82,7 @@ export default function ProfileOptions() {
                 Future Option 3
               </Button>
               <Button
-                onClick={logout}
+                onClick={logOut}
                 w="194px"
                 variant="ghost"
                 rightIcon={<ArrowRightIcon h={5}/>}

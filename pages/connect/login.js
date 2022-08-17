@@ -14,23 +14,28 @@ import {
   } from '@chakra-ui/react';
   
 import React, { useEffect, useState } from "react";
-import Router from 'next/router'
-import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../../firebase/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+// import Router from 'next/router'
+// import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../../firebase/firebase";
+// import { useAuthState } from "react-firebase-hooks/auth";
 
+import { useRouter } from 'next/router';
+import { useAuthUserContext } from '../../context/AuthUserContext';
 
-  function Login() {
+function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [user, loading, error] = useAuthState(auth);
+    // const [user, loading, error] = useAuthState(auth);
+    
+    const [error, setError] = useState(null);
+    const { authUser, loading, logOut, signUp, signIn, signInWithGoogle } = useAuthUserContext();
+    const router = useRouter();
 
     useEffect(() => {
       if (loading) {
-        // maybe trigger a loading screen
         return;
       }
-      if (user) {Router.push('/dashboard')};
-    }, [user, loading]);
+      if (authUser) {router.push('/dashboard')};
+    }, [authUser, loading]);
 
 
     return (
@@ -77,7 +82,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
                   <Link href={"/connect/register"} color={'blue.400'}>Need a account?</Link>
                 </Stack>
                 <Button
-                  onClick={() => logInWithEmailAndPassword(email, password)}
+                  onClick={() => signIn(email, password)}
                   bg={'blue.400'}
                   color={'white'}
                   _hover={{

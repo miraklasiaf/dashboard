@@ -1,13 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Button, Grid, GridItem } from "@chakra-ui/react";
-// import { uploadFileSimple } from "../../../services/FileuploadService";
-
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, storage } from "../../../firebase/firebase";
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 import Router from 'next/router'
+import { useAuthUserContext } from '../../../context/AuthUserContext';
+
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 import {
   AlertDialog,
@@ -23,7 +21,8 @@ import { Progress } from '@chakra-ui/react'
 
 export default function AudioCapture() {
 
-    const [user, loading, error] = useAuthState(auth);
+    const { authUser, loading, storage } = useAuthUserContext();
+
     const [audioURL, setAudioURL] = useState("");
     const [isRecording, setIsRecording] = useState(false);
     const [recorder, setRecorder] = useState(null);
@@ -34,15 +33,11 @@ export default function AudioCapture() {
     const [uploadFileName, setUploadFileName] = useState(null);
 
     const [firebaseUrl, setFirebaseUrl] = useState(null);
-    const [firebaseUserId, setFirebaseUserId] = useState(null);
 
     useEffect(() => {
       if (loading) return;
-      if (!user) {Router.push('/connect/login')};
-      // get user id from firebase auth
-      setFirebaseUserId(user.uid);
-      console.log('user id', user.uid);
-    }, [user, loading]);
+      if (!authUser) {Router.push('/connect/login')};
+    }, [authUser, loading]);  
 
     useEffect(() => {
         // Lazily obtain recorder first time we're recording.
@@ -93,7 +88,7 @@ export default function AudioCapture() {
     // };
     
     const saveAudioFirebase = async () => {
-      const storageRef = ref(storage, `user/${firebaseUserId}/${uploadFileName}`);
+      const storageRef = ref(storage, `user/${authUser?.uid}/${uploadFileName}`);
       const uploadTask = uploadBytesResumable(storageRef, audioBlobWav);
       uploadTask.on("state_changed",
       (snapshot) => {

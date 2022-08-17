@@ -4,16 +4,22 @@ import Nprogress from '@/components/nprogress';
 import theme from '@/components/design-system';
 import DefaultLayout from '@/layouts/default';
 
+import { AuthUserProvider } from '../context/AuthUserContext';
+
+
 const App = ({ Component, pageProps }) => {
   const getLayout =
     Component.getLayout || ((page) => <DefaultLayout children={page} />);
 
   return (
-    <ChakraProvider theme={theme}>
-      <CSSReset />
-      <Nprogress />
-      {getLayout(<Component {...pageProps} />)}
-    </ChakraProvider>
+    <AuthUserProvider>
+      <ChakraProvider theme={theme}>
+        <CSSReset />
+        <Nprogress />
+        {getLayout(<Component {...pageProps} />)}
+      </ChakraProvider>
+    </AuthUserProvider>
+
   );
 };
 

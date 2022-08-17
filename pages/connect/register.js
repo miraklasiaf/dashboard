@@ -18,30 +18,42 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 import React, { useEffect, useState } from "react";
 import Router from 'next/router'
-import { useAuthState } from "react-firebase-hooks/auth";
-import {
-  auth,
-  registerWithEmailAndPassword,
-  signInWithGoogle,
-} from "../../firebase/firebase";
-
+// import { useAuthState } from "react-firebase-hooks/auth";
+// import {
+//   auth,
+//   registerWithEmailAndPassword,
+//   signInWithGoogle,
+// } from "../../firebase/firebase";
+import { useAuthUserContext } from '../../context/AuthUserContext';
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [user, loading, error] = useAuthState(auth);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  // const [user, loading, error] = useAuthState(auth);
+  const { authUser, loading, logOut, signUp, signIn, signInWithGoogle } = useAuthUserContext();
+
 
   const register = () => {
-    if (!name) alert("Please enter name");
-    registerWithEmailAndPassword(name, email, password);
+    if (!firstName) alert("Please enter first name");
+    if (!lastName) alert("Please enter last name");
+    signUp(firstName, lastName, email, password);
   };
 
+  
   useEffect(() => {
-    if (loading) return;
-    if (user) {Router.push('/dashboard')};
-  }, [user, loading]);
+    if (loading) {
+      return;
+    }
+    if (authUser) {Router.push('/dashboard')};
+  }, [authUser, loading]);  
+
+  // useEffect(() => {
+  //   if (loading) return;
+  //   if (user) {Router.push('/dashboard')};
+  // }, [user, loading]);
 
     return (
       <Flex
@@ -70,15 +82,19 @@ function Register() {
                     <FormLabel>First Name</FormLabel>
                     <Input 
                       type="text" 
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
                     />
                   </FormControl>
                 </Box>
                 <Box>
                   <FormControl id="lastName">
                     <FormLabel>Last Name</FormLabel>
-                    <Input type="text" />
+                    <Input 
+                      type="text" 
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
                   </FormControl>
                 </Box>
               </HStack>

@@ -26,10 +26,6 @@ import {
   Rocketship
 } from '../icons';
 
-import { logout } from "../../firebase/firebase";
-
-
-
 
 const SidebarLink = ({ href, children, icon }) => (
   <NavLink href={href}>
@@ -58,7 +54,7 @@ function PageLinks() {
       <SidebarLink href="/dashboard/processed" icon={Folder}>
         Processed
       </SidebarLink>
-      <SidebarLink href="/dashboard/projects" icon={Folder}>
+      {/* <SidebarLink href="/dashboard/projects" icon={Folder}>
         Projects
       </SidebarLink>
       <SidebarLink href="/dashboard/calendar" icon={Calendar}>
@@ -69,7 +65,7 @@ function PageLinks() {
       </SidebarLink>
       <SidebarLink href="/dashboard/reports" icon={ChartSquareBar}>
         Reports
-      </SidebarLink>
+      </SidebarLink> */}
     </VStack>
   );
 }

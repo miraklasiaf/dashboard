@@ -1,49 +1,33 @@
 import { getLayout } from '@/layouts/dashboard';
 
-import React, { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "../firebase/firebase";
-import { query, collection, getDocs, where } from "firebase/firestore";
+import React, { useEffect } from "react";
+import { useRouter } from 'next/router';
+import { useAuthUserContext } from '../context/AuthUserContext';
 
-import Router from 'next/router'
-
-
-// const DashboardIndex = () => <div>this is dashboard page</div>;
-// DashboardIndex.getLayout = getLayout;
-// export default DashboardIndex;
+import { Button } from '@chakra-ui/react'
 
 function Dashboard() {
-    const [user, loading, error] = useAuthState(auth);
-    const [name, setName] = useState("");
 
-    const fetchUserName = async () => {
-        try {
-          const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-          const doc = await getDocs(q);
-          const data = doc.docs[0].data();
-          setName(data.name);
-        } catch (err) {
-          console.error(err);
-          // alert("An error occured while fetching user data");
-        }
-      };
+    const { authUser, loading, logOut } = useAuthUserContext();
+    const Router = useRouter();
 
-      useEffect(() => {
-        if (loading) return;
-        if (!user) {Router.push('/connect/login')};
-        fetchUserName();
-      }, [user, loading]);
+    useEffect(() => {
+      if (loading) return;
+      if (!authUser) {Router.push('/connect/login')};
+    }, [authUser, loading]);
 
-      return (
-        <div className="dashboard">
-          <div className="dashboard__container">
-            Logged in as
-            <div>{name}</div>
-            <div>{user?.email}</div>
-          </div>
-        </div>
-      );
-    }
+    const displayName = authUser?.uid;
+    const displayEmail = authUser?.email;
+
+    return (
+      <div className="dashboard">
+          <div> {displayName}</div>
+          <div> {displayEmail}</div>
+          <Button onClick={logOut} mt='10'> Logout </Button>
+      </div>
+    );
+
+}
 
 Dashboard.getLayout = getLayout;
 export default Dashboard;

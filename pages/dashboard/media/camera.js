@@ -4,10 +4,7 @@ import { getImageSize } from "../../../utils/image";
 
 import { Grid, GridItem, Button, Center, Progress } from '@chakra-ui/react'
 
-// import { uploadFileSimple } from "../../../services/FileuploadService";
-
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, storage } from "../../../firebase/firebase";
+import { useAuthUserContext } from '../../../context/AuthUserContext';
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 import React from "react";
@@ -35,7 +32,8 @@ const colorScheme = [
 
 export default function CameraApp() {
 
-  const [user, loading, error] = useAuthState(auth);
+  const { authUser, loading, storage } = useAuthUserContext();
+
   const [isUseCamera, setUseCamera] = useState(false);
   const [photo, setPhoto] = useState(null);
   const [result, setResult] = useState(null);
@@ -48,15 +46,12 @@ export default function CameraApp() {
 
   const [progresspercent, setProgresspercent] = useState(0);
   const [firebaseUrl, setFirebaseUrl] = useState(null);
-  const [firebaseUserId, setFirebaseUserId] = useState(null);
+
 
   useEffect(() => {
     if (loading) return;
-    if (!user) {Router.push('/connect/login')};
-    // get user id from firebase auth
-    setFirebaseUserId(user.uid);
-    console.log('user id', user.uid);
-  }, [user, loading]);
+    if (!authUser) {Router.push('/connect/login')};
+  }, [authUser, loading]);  
 
 
   useEffect(() => {
@@ -101,7 +96,6 @@ export default function CameraApp() {
     }
   };
 
-
   const handleResetPhoto = () => {
     setPhoto(false);
     setResult(null);
@@ -111,28 +105,11 @@ export default function CameraApp() {
   };
 
 
-  // const handleSavePhoto = async () => {
-  //   const blob = await (await fetch(photo)).blob()
-  //   const fileName = new Date().getTime() + ".jpg";
-  //   const file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});
-  //   try 
-  //     {
-  //       const result = uploadFileSimple(file);
-  //       console.log(result);
-  //       onOpen();
-  //     }
-  //     catch (error) {
-  //       console.log(error);
-  //     }
-  // };
-
-
-
   const handleSavePhotoFirebase = async () => {
     const blob = await (await fetch(photo)).blob()
     const fileName = new Date().getTime() + ".jpg";
     const file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});
-    const storageRef = ref(storage, `user/${firebaseUserId}/${fileName}`);
+    const storageRef = ref(storage, `user/${authUser?.uid}/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on("state_changed",
     (snapshot) => {
