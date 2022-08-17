@@ -54,6 +54,9 @@ function PageLinks() {
       <SidebarLink href="/dashboard/processed" icon={Folder}>
         Processed
       </SidebarLink>
+      <SidebarLink href="/dashboard/share" icon={Inbox}>
+        Share
+      </SidebarLink>
       {/* <SidebarLink href="/dashboard/projects" icon={Folder}>
         Projects
       </SidebarLink>

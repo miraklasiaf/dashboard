@@ -47,8 +47,12 @@ const MediaPage = () => {
     const [firebaseData, setfirebaseData] = useState([]) // empty array
     const [progresspercent, setProgresspercent] = useState(0);
     const [resetKey, setResetKey] = useState(null);
+    const [deleteKey, setDeleteKey] = useState(null);
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isUploadOpen, onOpen: onUploadOpen, onClose: onUploadClose } = useDisclosure()
+    const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure()
+
+
     const cancelRef = React.useRef()
 
     useEffect(() => {
@@ -86,6 +90,12 @@ const MediaPage = () => {
     };
 
 
+    const modalFirebasedelete = (rowName) => {
+      onDeleteOpen();
+      console.log('modalFirebasedelete', rowName);
+      setDeleteKey(rowName);
+    }
+
     const deleteButtonFirebase = (rowName) => {
       console.log('Button action: row to delete', rowName);
       deleteObject(ref(storage, `user/${authUser?.uid}/${rowName}`)).then(() => {
@@ -94,7 +104,11 @@ const MediaPage = () => {
       }).catch((error) => {
         console.log(error);
       });
+      onDeleteClose();
     }
+
+
+
 
     const PreviewFile = (rowUrl) => {
       if (rowUrl.includes('.jpg') || rowUrl.includes('.jpeg') || rowUrl.includes('.png') || rowUrl.includes('.gif')) {
@@ -141,12 +155,12 @@ const MediaPage = () => {
       const files = Array.from(selectedFiles);
       const uploadPromises = files.map((file) => uploadFirebase(file));
       Promise.all(uploadPromises).then(() => {
-        onOpen();
+        onUploadOpen();
       })
     };
 
     const succesfullUpload = () => {
-      onClose();
+      onUploadClose();
       clearFiles();
       firebaseDataretrieve();
     }
@@ -158,8 +172,6 @@ const MediaPage = () => {
       let randomString = Math.random().toString(36);
       setResetKey(randomString);
     }
-
-
 
     const GotoCamera = () => {
       Router.push('/dashboard/media/camera')
@@ -260,7 +272,7 @@ const MediaPage = () => {
                       <Td>{fileInfo.name.split('.')[1]}</Td>
                       <Td> {PreviewFile(fileInfo.url)} </Td>
                       <Td> <Button> <a href={fileInfo.url}> Download</a> </Button></Td>
-                      <Td> <Button colorScheme='red' onClick={() => deleteButtonFirebase(fileInfo.name)}> Delete </Button></Td>
+                      <Td> <Button colorScheme='yellow' onClick={() => modalFirebasedelete(fileInfo.name)}> Delete </Button></Td>
                   </Tr>
                 ))}
               </Tbody>
@@ -269,9 +281,9 @@ const MediaPage = () => {
 
         
         <AlertDialog
-        isOpen={isOpen}
+        isOpen={isUploadOpen}
         leastDestructiveRef={cancelRef}
-        onClose={onClose}
+        onClose={onUploadClose}
         >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -291,6 +303,28 @@ const MediaPage = () => {
       </AlertDialog>
 
 
+
+      <AlertDialog
+        isOpen={isDeleteOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onDeleteClose}
+        >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Delete file!
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure you want to delete the file?
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button colorScheme='red' onClick={() => deleteButtonFirebase(deleteKey)}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
 
 
 
