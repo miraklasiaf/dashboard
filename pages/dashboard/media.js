@@ -9,7 +9,9 @@ import Router from 'next/router'
 import ReactAudioPlayer from 'react-audio-player';
 
 import { Flex, Input, Button, Stack, Alert, AlertIcon, Heading, useDisclosure, Avatar, FormControl } from '@chakra-ui/react'
-import { Progress } from '@chakra-ui/react'
+import { Progress, Code, Tag } from '@chakra-ui/react'
+
+import axios from "axios";
 
 import {
     Table,
@@ -119,6 +121,12 @@ const MediaPage = () => {
       else if (rowUrl.includes('.wav') || rowUrl.includes('.mp3')) {
         return (
           <ReactAudioPlayer src={rowUrl} controls />
+        )
+      }
+      else if (rowUrl.includes('.txt')) {
+        console.log('rowUrl: ', rowUrl);
+        return (
+          <Tag size='sm'> <object data={rowUrl} margin='0'/> </Tag>
         )
       }
     }
@@ -236,6 +244,11 @@ const MediaPage = () => {
                 Record audio!
               </Button>
           </GridItem>
+          <GridItem h='10'>
+            <Button onClick={() => Router.push('/dashboard/media/text')}>
+                Type text!
+              </Button>
+          </GridItem>
         </Grid>
 
 
@@ -271,7 +284,7 @@ const MediaPage = () => {
                       <Td>{fileInfo.name}</Td>
                       <Td>{fileInfo.name.split('.')[1]}</Td>
                       <Td> {PreviewFile(fileInfo.url)} </Td>
-                      <Td> <Button> <a href={fileInfo.url}> Download</a> </Button></Td>
+                      <Td> <Button> <a href={fileInfo.url} target="_blank"> Download</a> </Button></Td>
                       <Td> <Button colorScheme='yellow' onClick={() => modalFirebasedelete(fileInfo.name)}> Delete </Button></Td>
                   </Tr>
                 ))}
