@@ -197,7 +197,7 @@ const MediaPage = () => {
                   multiple
                   onChange={selectFiles}
                   variant="flushed"
-                  accept=".jpg, .jpeg, .wav, .m4a"
+                  accept=".jpg, .jpeg, .wav, .m4a, .txt"
                   key={resetKey || '' }
               />
           </FormControl>
