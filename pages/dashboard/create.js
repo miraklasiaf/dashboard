@@ -1,12 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from 'next/router';
 import { useAuthUserContext } from '../../context/AuthUserContext';
 import { getLayout } from '@/layouts/dashboard';
-import { getStorage, ref, listAll, getDownloadURL, uploadBytesResumable, deleteObject} from "firebase/storage";
+import { ref, listAll, getDownloadURL} from "firebase/storage";
 import ReactAudioPlayer from 'react-audio-player';
 
-import {Table, Thead, Tbody, Tr, Th, Td, TableContainer} from '@chakra-ui/react'
-import { Box, Heading, Avatar, Flex, Grid, GridItem, Button, Select } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, TableContainer} from '@chakra-ui/react'
+import { Tag, Badge, Box, Heading, Avatar, Flex, Grid, GridItem, Button, Select } from '@chakra-ui/react';
+
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useDisclosure,
+} from '@chakra-ui/react'
+
+import axios from "axios";
 
 function Create() {
 
@@ -14,9 +26,17 @@ function Create() {
   const Router = useRouter();
   const [audioFiles, setAudioFiles] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
+  const [audioToSend, setAudioToSend] = useState(null);
   const [selectedAudio, setSelectedAudio] = useState([]);
+  const [imageToSend, setImageToSend] = useState([]);
   const [selectedImage, setSelectedImage] = useState([]);
   const [previewDone, setPreviewDone] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null);
+  const { isOpen: isUploadOpen, onOpen: onUploadOpen, onClose: onUploadClose } = useDisclosure()
+
+
+  const cancelRef = React.useRef()
+
 
 
   useEffect(() => {
@@ -24,6 +44,9 @@ function Create() {
     if (!authUser) {Router.push('/connect/login')};
     firebaseDataretrieve();
   }, [authUser, loading]);
+
+
+
 
   const firebaseDataretrieve = () => {
     setAudioFiles([]);
@@ -48,35 +71,101 @@ function Create() {
       })
   }
 
-
-  const generatePreview = () => {
-
-    console.log("buttonClick1");
-    console.log('currentAudioSelected: ', selectedAudio);
-    console.log('currentImageSelected: ', selectedImage);
-
-    // // find matched selectedAudio from fileInfos
-    // for (let i = 0; i < fileInfos.length; i++) {
-    //   if (fileInfos[i].name === selectedAudio) {
-    //     console.log('matched audio: ', fileInfos[i]);
-    //     setSelectedAudioPreview(fileInfos[i]);
-    //   }
-    // };
-
-    // // find matched selectedImage from fileInfos
-    // for (let i = 0; i < fileInfos.length; i++) {
-    //   if (fileInfos[i].name === selectedImage) {
-    //     console.log('matched image: ', fileInfos[i]);
-    //     setSelectedImagePreview(fileInfos[i]);
-    //   }
-    // };
-
-    setPreviewDone(true);
-
+  const handleAudioChange = (targetValue) => {
+    setSelectedAudio(targetValue);
+    setPreviewDone(false);
+    setAudioToSend(null);
+    setImageToSend(null);
+    console.log(audioToSend)
   }
 
+  const handleImageChange = (targetValue) => {
+    setSelectedImage(targetValue);
+    setPreviewDone(false)
+    setAudioToSend(null);
+    setImageToSend(null);
+    console.log(selectedImage)
+  }
+
+  const generatePreview = () => {
+    setPreviewDone(true);
+    gettingDataImage();
+    gettingDataAudio();
+  }
+
+  const resetWindow = () => {
+    setPreviewDone(false);
+    setAudioToSend(null);
+    setImageToSend(null);
+    setSelectedAudio([]);
+    setSelectedImage([]);
+  }
+
+  const gettingDataImage = () => {
+    for (let i = 0; i < imageFiles.length; i++) {
+      if (imageFiles[i].url === selectedImage) {
+        let selectedImage_url = imageFiles[i].url;
+        let selectedImage_name = imageFiles[i].name;
+        setImageToSend({'url': selectedImage_url, 'name': selectedImage_name});
+        console.log("imageToSend: ", {'url': selectedImage_url, 'name': selectedImage_name});
+      } else {
+        console.log("no matched image");
+      } 
+    }
+  }
+
+  const gettingDataAudio = () => {
+    for (let i = 0; i < audioFiles.length; i++) {
+      if (audioFiles[i].url === selectedAudio) {
+        let selectedAudio_url = audioFiles[i].url;
+        let selectedAudio_name = audioFiles[i].name;
+        setAudioToSend({'url': selectedAudio_url, 'name': selectedAudio_name});
+        console.log("audioToSend: ", {'url': selectedAudio_url, 'name': selectedAudio_name});
+      } else {
+        console.log("no matched audio");
+      }
+    }
+  }
+  
 
 
+  const startApiCall1 = () => {
+
+    var configPost = {
+      method: 'post',
+      url: 'http://localhost:5000/start-task',
+      data : {
+        "input_string": imageToSend.name,
+        "user_uuid": authUser?.uid,
+      },
+      headers: { 
+        'Content-Type': '*/*',
+        'Accept': '*/*',
+    }}
+
+    axios(configPost)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+      setApiResponse(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+    onUploadOpen();
+
+  };
+
+
+  const succesfullUpload = () => {
+    onUploadClose();
+  }
+
+  const GotoProcessing = () => {
+    Router.push('/dashboard/processed')
+  }
+  
+    
 
 
 
@@ -89,7 +178,7 @@ function Create() {
                 <Heading fontSize='xl' mb='2'>Image</Heading> 
                 <Select
                       value={selectedImage}
-                      onChange={(e) => setSelectedImage(e.target.value)}
+                      onChange={(e) => handleImageChange(e.target.value)}
                     > 
                     {imageFiles.map((fileInfo) => (
                       <option key={fileInfo.id} value={fileInfo.url}>{fileInfo.name}</option>
@@ -103,25 +192,16 @@ function Create() {
                 <Heading fontSize='xl' mb='2'>Audio</Heading> 
                   <Select 
                   value={selectedAudio}
-                  onChange={(e) => setSelectedAudio(e.target.value)}
+                  onChange={(e) => handleAudioChange(e.target.value)}
                   > 
-                    {audioFiles.map((fileInfo) => (
+                    {audioFiles.map((fileInfo) => (                                      
                       <option key={fileInfo.id} value={fileInfo.url} >{fileInfo.name}</option>
                     ))}
                   </Select>             
               </Box>
             </GridItem>
-
-            <GridItem w='100%' h='10'>
-              <Button onClick={generatePreview} colorScheme='pink'>
-              Preview
-              </Button>
-            </GridItem>
-
           </Grid>
-
-
-          {previewDone && (
+        
           <Flex>
             <TableContainer mt='50'>
                 <Table variant='simple' maxWidth='100%' display='block' overflowX='auto'>
@@ -145,23 +225,86 @@ function Create() {
                 </Table>
             </TableContainer>
         </Flex>
-        )}
+      
 
-      {previewDone && (
-          <Flex>
+      
+        <Flex>
             <Grid templateColumns='repeat(5, 1fr)' gap={6} mt='10'>
+            <GridItem w='100%' h='10'>
+
+            {previewDone && (
+              <Button onClick={generatePreview} colorScheme='green' isDisabled='true'>
+              Selection confirmed!
+              </Button>
+            )}
+
+            {!previewDone && (
+              <Button colorScheme='yellow' onClick={generatePreview}>
+              Click to confirm preview selection
+              </Button>
+            )}
+
+
+
+            </GridItem>
+            <GridItem w='100%' h='10'>
+              <Button onClick={resetWindow} colorScheme='pink'>
+              Reset?
+              </Button>
+            </GridItem>
+            <GridItem w='100%' h='10'>
+              <Badge colorScheme='pink'> {imageToSend?.name ?? 'Please make a selection'} </Badge> 
+              <Badge colorScheme='pink'> {audioToSend?.name ?? 'Please make a selection'} </Badge>
+            </GridItem>
+            </Grid>
+        </Flex>
+
+        {previewDone && (
+          <Flex>
+            <Grid templateColumns='repeat(5, 1fr)' gap={1} mt='10'>
               <GridItem w='100%' h='10'>
-              <Button> Run API #1 </Button> 
+                <Button onClick={startApiCall1}> Run API #1 </Button> 
               </GridItem>
               <GridItem w='100%' h='10'>
-              <Button> Run API #2 </Button>
+                <Button> Run API #2 </Button>
               </GridItem>
               <GridItem w='100%' h='10'>
-              <Button> Run API #3 </Button>
+                <Button> Run API #3 </Button>
               </GridItem>
             </Grid>
           </Flex>
+
         )}
+
+
+
+      <AlertDialog
+        isOpen={isUploadOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onUploadClose}
+        >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Processed has started!
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Please go to 'Processed' to look for updates
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button onClick={succesfullUpload}>
+                Return
+              </Button>
+              <Button colorScheme='yellow' onClick={GotoProcessing} ml={3}>
+              ...Processing
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+
+        
 
 
     </div>

@@ -6,8 +6,9 @@ import { collection, getDocs, getDoc, collectionGroup, query, where } from "fire
 import { getLayout } from '@/layouts/dashboard';
 import Router from 'next/router'
 
-
 import { Heading, useDisclosure } from '@chakra-ui/react'
+import axios from "axios";
+
 
 import {
     Table,
@@ -18,6 +19,7 @@ import {
     Td,
     TableCaption,
     TableContainer,
+    Button
   } from '@chakra-ui/react'
 
 const Processing = () => {
@@ -34,14 +36,6 @@ const Processing = () => {
 
     // get a snapshot of each document with the collection tasks within each user document
     const firebaseDataretrieve = async () => {
-      
-      // // this is the version below if you want to get all tasks across all users 
-      // const querySnapshot = await getDocs(collectionGroup(db, 'tasks'));
-      // console.log('querySnapshot', querySnapshot.docs.map(doc => doc.data()));
-
-      // // this is the verison below that is for a specific user, since i fucked up
-      // // the document IDs, which are different from user IDs, need to first search and query
-      // // should perhaps change the docIds here to authUser.uid's to match and make it easier
       const q = query(collection(db, "users"), where("uid", "==", authUser.uid));
       const querySnapshot1 = await getDocs(q);
       querySnapshot1.forEach((doc) => {
@@ -60,9 +54,39 @@ const Processing = () => {
         task_status: doc.data().task_status, 
         task_id: doc.data().task_id, 
         input_param: doc.data().input_param,
-        task_result: doc.data().task_result?.result ?? 'still in progress or potential error'
+        task_result: doc.data().task_result?.result ?? 'still in progress or potential error',
+        task_created_at: doc.data().task_created_at?.toDate().toLocaleTimeString('en-US'),
+        task_finished_at: doc.data().task_finished_at?.toDate().toLocaleTimeString('en-US'),
       }));
       setfirebaseData(firebaseData);
+      console.log(firebaseData)
+    }
+
+
+  const reCheckStatus = (itemId) => {
+    axios(
+      {
+        method: 'get',
+        url: `http://localhost:5000/check_task/${authUser.uid}/${itemId}`,
+        headers: {
+          'Content-Type': '*/*',
+          'Accept': '*/*'
+        }
+      }
+    )
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+
+    const checkRowItem = async (itemId) => {
+      reCheckStatus(itemId);
+      await setfirebaseData([]);
+      firebaseDataretrieve();
     }
 
 
@@ -77,24 +101,32 @@ const Processing = () => {
 
         <Heading as='h5' mt='50'> Processed </Heading>
 
+        {/* <Button onClick={reLoadTable} colorScheme="yellow" mt='10'> Recheck status</Button> */}
+
         <TableContainer mt='50'>
           <Table variant='simple' maxWidth='100%' display='block' overflowX='auto'>
               <TableCaption>Uploaded files...</TableCaption>
               <Thead>
               <Tr>
                   <Th>Input_Param</Th>
-                  <Th>Task_Id </Th>
-                  <Th>Task_Result</Th>
                   <Th>Task_Status</Th>
+                  <Th>Recheck Status</Th>
+                  <Th>Task_Result</Th>
+                  <Th>Task_Id </Th>
+                  <Th>Start_Time</Th>
+                  <Th>End_Time</Th>
               </Tr>
               </Thead>
               <Tbody>
                 {firebaseData.map((fileInfo, index) => (
                   <Tr key={index}>
                       <Td>{fileInfo.input_param}</Td>
-                      <Td>{fileInfo.task_id}</Td>
-                      <Td>{fileInfo.task_result}</Td>
                       <Td>{fileInfo.task_status}</Td>
+                      <Td> <Button onClick={() => checkRowItem(fileInfo.task_id)} colorScheme="yellow"> Recheck status</Button></Td>
+                      <Td>{fileInfo.task_result}</Td>
+                      <Td>{fileInfo.task_id}</Td>
+                      <Td>{fileInfo.task_created_at}</Td>
+                      <Td>{fileInfo.task_finished_at}</Td>
                   </Tr>
                 ))}
               </Tbody>

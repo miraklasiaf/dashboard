@@ -19,6 +19,8 @@ import {
     collection,
     where,
     addDoc,
+    doc,
+    setDoc,
   } from "firebase/firestore";
 
 import { getStorage } from "firebase/storage";
@@ -71,12 +73,19 @@ export default function useFirebaseAuth() {
         const q = query(collection(db, "users"), where("uid", "==", user.uid));
         const docs = await getDocs(q);
         if (docs.docs.length === 0) {
-          addDoc(collection(db, "users"), {
-          uid: user.uid,
-          name: user.displayName,
-          authProvider: "google",
-          email: user.email,
+          setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            email: user.email,
+            name: user.displayName,
+            authProvider: "google",
+            createdAt: new Date()
           });
+          // addDoc(collection(db, "users"), {
+          // uid: user.uid,
+          // name: user.displayName,
+          // authProvider: "google",
+          // email: user.email,
+          // });
       }
         // redux action? --> dispatch({ type: SET_USER, user });
         router.push('/dashboard');
@@ -112,12 +121,19 @@ export default function useFirebaseAuth() {
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
       const docs = await getDocs(q);
       if (docs.docs.length === 0) {
-        addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: `${firstName} ${lastName}`,
-        authProvider: "manual",
-        email: user.email,
+        setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          email: user.email,
+          name: user.displayName,
+          authProvider: "manual",
+          createdAt: new Date()
         });
+        // addDoc(collection(db, "users"), {
+        // uid: user.uid,
+        // name: `${firstName} ${lastName}`,
+        // authProvider: "manual",
+        // email: user.email,
+        // });
       }
       router.push('/dashboard');      
     })
