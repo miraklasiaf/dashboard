@@ -18,12 +18,6 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 import React, { useEffect, useState } from "react";
 import Router from 'next/router'
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import {
-//   auth,
-//   registerWithEmailAndPassword,
-//   signInWithGoogle,
-// } from "../../firebase/firebase";
 import { useAuthUserContext } from '../../context/AuthUserContext';
 
 function Register() {
@@ -32,7 +26,6 @@ function Register() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  // const [user, loading, error] = useAuthState(auth);
   const { authUser, loading, logOut, signUp, signIn, signInWithGoogle } = useAuthUserContext();
 
 

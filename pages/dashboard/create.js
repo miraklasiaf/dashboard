@@ -244,32 +244,34 @@ function Create() {
               </Button>
             )}
 
-
-
             </GridItem>
+
+
             <GridItem w='100%' h='10'>
-              <Button onClick={resetWindow} colorScheme='pink'>
+              <Button onClick={resetWindow}>
               Reset?
               </Button>
             </GridItem>
-            <GridItem w='100%' h='10'>
-              <Badge colorScheme='pink'> {imageToSend?.name ?? 'Please make a selection'} </Badge> 
-              <Badge colorScheme='pink'> {audioToSend?.name ?? 'Please make a selection'} </Badge>
-            </GridItem>
+
             </Grid>
+
+
+
+
+
         </Flex>
 
         {previewDone && (
           <Flex>
             <Grid templateColumns='repeat(5, 1fr)' gap={1} mt='10'>
               <GridItem w='100%' h='10'>
-                <Button onClick={startApiCall1}> Run API #1 </Button> 
+                <Button colorScheme='yellow' onClick={startApiCall1}> Run API #1 </Button> 
               </GridItem>
               <GridItem w='100%' h='10'>
-                <Button> Run API #2 </Button>
+                <Button isDisabled='true'> Run API #2 </Button>
               </GridItem>
               <GridItem w='100%' h='10'>
-                <Button> Run API #3 </Button>
+                <Button isDisabled='true'> Run API #3 </Button>
               </GridItem>
             </Grid>
           </Flex>
@@ -289,14 +291,14 @@ function Create() {
               Processed has started!
             </AlertDialogHeader>
             <AlertDialogBody>
-              Please go to 'Processed' to look for updates
+              It has begun processing your media. You can now redirect to the processing page to monitor.
             </AlertDialogBody>
             <AlertDialogFooter>
               <Button onClick={succesfullUpload}>
                 Return
               </Button>
-              <Button colorScheme='yellow' onClick={GotoProcessing} ml={3}>
-              ...Processing
+              <Button colorScheme='blue' onClick={GotoProcessing} ml={3}>
+              Monitor progress!
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

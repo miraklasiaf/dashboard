@@ -14,17 +14,12 @@ import {
   } from '@chakra-ui/react';
   
 import React, { useEffect, useState } from "react";
-// import Router from 'next/router'
-// import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../../firebase/firebase";
-// import { useAuthState } from "react-firebase-hooks/auth";
-
 import { useRouter } from 'next/router';
 import { useAuthUserContext } from '../../context/AuthUserContext';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // const [user, loading, error] = useAuthState(auth);
     
     const [error, setError] = useState(null);
     const { authUser, loading, logOut, signUp, signIn, signInWithGoogle } = useAuthUserContext();

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { useAuthUserContext } from '../../context/AuthUserContext';
-import { collection, getDocs, getDoc, collectionGroup, query, where } from "firebase/firestore"; 
+import { collection, getDocs, getDoc, collectionGroup, query, where, deleteDoc, doc } from "firebase/firestore"; 
 
 import { getLayout } from '@/layouts/dashboard';
 import Router from 'next/router'
@@ -9,6 +9,14 @@ import Router from 'next/router'
 import { Heading, useDisclosure } from '@chakra-ui/react'
 import axios from "axios";
 
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+} from '@chakra-ui/react'
 
 import {
     Table,
@@ -26,6 +34,11 @@ const Processing = () => {
 
     const { authUser, loading, db } = useAuthUserContext();
     const [firebaseData, setfirebaseData] = useState([]) // empty array
+    const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure()
+    const [deleteKey, setDeleteKey] = useState(null);
+
+    const cancelRef = React.useRef()
+
 
     useEffect(() => {
       if (loading) return;
@@ -90,6 +103,24 @@ const Processing = () => {
     }
 
 
+    const deleteButton = (rowName) => {
+      console.log('Button action: row to delete', rowName);
+      deleteDoc(doc(db, `users/${authUser?.uid}/tasks/${rowName}`)).then(() => {
+        console.log('File deleted successfully');
+        firebaseDataretrieve();
+      }).catch((error) => {
+        console.log(error);
+      });
+      onDeleteClose();
+    }
+
+    const modalFirebasedelete = (rowName) => {
+      onDeleteOpen();
+      console.log('modalFirebasedelete', rowName);
+      setDeleteKey(rowName);
+    }
+
+
 
     return (
 
@@ -99,7 +130,7 @@ const Processing = () => {
 
 
 
-        <Heading as='h5' mt='50'> Processed </Heading>
+        <Heading as='h5' mt='50'> Processing </Heading>
 
         {/* <Button onClick={reLoadTable} colorScheme="yellow" mt='10'> Recheck status</Button> */}
 
@@ -115,6 +146,7 @@ const Processing = () => {
                   <Th>Task_Id </Th>
                   <Th>Start_Time</Th>
                   <Th>End_Time</Th>
+                  <Th>Delete</Th>
               </Tr>
               </Thead>
               <Tbody>
@@ -122,11 +154,14 @@ const Processing = () => {
                   <Tr key={index}>
                       <Td>{fileInfo.input_param}</Td>
                       <Td>{fileInfo.task_status}</Td>
-                      <Td> <Button onClick={() => checkRowItem(fileInfo.task_id)} colorScheme="yellow"> Recheck status</Button></Td>
+                      <Td> 
+                        {fileInfo.task_status === 'SUCCESS' ? (<Button isDisabled='yes' colorScheme="green"> Complete </Button>) : <Button onClick={() => checkRowItem(fileInfo.task_id)} colorScheme="yellow"> Recheck status</Button>}
+                      </Td>
                       <Td>{fileInfo.task_result}</Td>
                       <Td>{fileInfo.task_id}</Td>
                       <Td>{fileInfo.task_created_at}</Td>
                       <Td>{fileInfo.task_finished_at}</Td>
+                      <Td> <Button onClick={() => modalFirebasedelete(fileInfo.task_id)} colorScheme="red"> Delete</Button></Td>
                   </Tr>
                 ))}
               </Tbody>
@@ -134,6 +169,34 @@ const Processing = () => {
         </TableContainer>
 
         
+
+        <AlertDialog
+        isOpen={isDeleteOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onDeleteClose}
+        >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Delete file!
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure you want to delete the file?
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button colorScheme='red' onClick={() => deleteButton(deleteKey)}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+
+
+
+
+
 
         </div>
 

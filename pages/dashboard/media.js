@@ -264,7 +264,7 @@ const MediaPage = () => {
             </Stack>
         )}
 
-        <Heading as='h5' mt='50'> Media files </Heading>
+        <Heading as='h5' mt='50'> Your Media files </Heading>
 
         <TableContainer mt='50'>
           <Table variant='simple' maxWidth='100%' display='block' overflowX='auto'>
