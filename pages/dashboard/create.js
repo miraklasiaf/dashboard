@@ -135,13 +135,15 @@ function Create() {
       method: 'post',
       url: 'http://localhost:5000/start-task',
       data : {
-        "input_string": imageToSend.name,
-        "user_uuid": authUser?.uid,
+        input_string: imageToSend.name,
+        user_uuid: authUser?.uid,
       },
       headers: { 
-        'Content-Type': '*/*',
-        'Accept': '*/*',
+        'content-type': 'application/json',
+        'accept': 'application/json',
     }}
+
+    console.log("configPost: ", configPost);
 
     axios(configPost)
     .then(function (response) {
