@@ -52,7 +52,7 @@ function PageLinks() {
         Create
       </SidebarLink>
       <SidebarLink href="/dashboard/processed" icon={Folder}>
-        Processed
+        Task Queue
       </SidebarLink>
       <SidebarLink href="/dashboard/share" icon={Inbox}>
         Share

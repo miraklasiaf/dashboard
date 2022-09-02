@@ -159,6 +159,111 @@ function Create() {
   };
 
 
+  const a2hCelery = () => {
+
+    const configPost2 = {
+      method: 'post',
+      url: 'http://localhost:5000/start-task/video1',
+      data : {
+        user_uuid: authUser?.uid,
+        image_url: imageToSend.url,
+        audio_url: audioToSend.url,
+        image_name: imageToSend.name,
+        audio_name: audioToSend.name
+      },
+      headers: { 
+        'content-type': 'application/json',
+        'accept': 'application/json',
+    }}
+
+    console.log("configPost2: ", configPost2);
+
+    axios(configPost2)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+      setApiResponse(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+    onUploadOpen();
+
+  };
+
+
+  const a2h_batchAws = () => {
+
+    const configPost3 = {
+      method: 'post',
+      url: 'http://localhost:5000/start-task/aws-batch/video1/',
+      data : {
+        user_uuid: authUser?.uid,
+        image_url: imageToSend.url,
+        audio_url: audioToSend.url,
+        image_name: imageToSend.name,
+        audio_name: audioToSend.name
+      },
+      headers: { 
+        'content-type': 'application/json',
+        'accept': 'application/json',
+    }}
+
+    console.log("configPost3: ", configPost3);
+
+    axios(configPost3)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+      setApiResponse(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+    onUploadOpen();
+
+  };
+
+
+  const a2h_lambda = () => {
+
+    // check this out for dummy secure, simple additional header 
+    // https://aws.amazon.com/blogs/aws/announcing-aws-lambda-function-urls-built-in-https-endpoints-for-single-function-microservices/
+
+    const configPost3 = {
+      method: 'post',
+      url: 'https://6k64tutroqfhh3eab35qc2u7um0rgaoj.lambda-url.us-east-1.on.aws/',
+      data : {
+        user_uuid: authUser?.uid,
+        image_url: imageToSend.url,
+        audio_url: audioToSend.url,
+        image_name: imageToSend.name,
+        audio_name: audioToSend.name
+      },
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'access-control-allow-origin': 'http://localhost:3000/dashboard/create',
+    }}
+
+    console.log("configPost3: ", configPost3);
+
+    axios(configPost3)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+      setApiResponse(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+    onUploadOpen();
+
+  };
+
+
+
+
   const succesfullUpload = () => {
     onUploadClose();
   }
@@ -266,15 +371,24 @@ function Create() {
         {previewDone && (
           <Flex>
             <Grid templateColumns='repeat(5, 1fr)' gap={1} mt='10'>
+              {/* <GridItem w='100%' h='10'>
+                <Button bgGradient='linear(to-l, #7928CA, #FF0080)' onClick={startApiCall1}> Run API #1 - Audio </Button> 
+              </GridItem> */}
               <GridItem w='100%' h='10'>
-                <Button colorScheme='yellow' onClick={startApiCall1}> Run API #1 </Button> 
+                <Button bgGradient='linear(to-l, #7928CA, #FF0080)' onClick={a2hCelery}> Audio2Head: Audio + Image / Celery Worker </Button>
               </GridItem>
               <GridItem w='100%' h='10'>
-                <Button isDisabled='true'> Run API #2 </Button>
+                <Button bgGradient='linear(to-l, #7928CA, #FF0080)' onClick={a2h_lambda}> Audio2Head: Audio + Image / AWS Lambda </Button>
               </GridItem>
               <GridItem w='100%' h='10'>
+                <Button bgGradient='linear(to-l, #7928CA, #FF0080)' onClick={a2h_batchAws}> Audio2Head: Audio + Image / AWS Batch Process </Button>
+              </GridItem>
+
+              
+
+              {/* <GridItem w='100%' h='10'>
                 <Button isDisabled='true'> Run API #3 </Button>
-              </GridItem>
+              </GridItem> */}
             </Grid>
           </Flex>
 

@@ -66,7 +66,8 @@ const Processing = () => {
       const firebaseData = querySnapshot2.docs.map(doc => ({
         task_status: doc.data().task_status, 
         task_id: doc.data().task_id, 
-        input_param: doc.data().input_param,
+        input_param_audio: doc.data().input_param?.audio_url || null,
+        input_param_image: doc.data().input_param?.image_url || null,
         task_result: doc.data().task_result?.result ?? 'still in progress or potential error',
         task_created_at: doc.data().task_created_at?.toDate().toLocaleTimeString('en-US'),
         task_finished_at: doc.data().task_finished_at?.toDate().toLocaleTimeString('en-US'),
@@ -120,6 +121,16 @@ const Processing = () => {
       setDeleteKey(rowName);
     }
 
+    const redirectAudioUrl = (audioUrl) => {
+      console.log('redirectAudioUrl', audioUrl);
+      window.open(audioUrl, '_blank');
+    }
+
+    const redirectImageUrl = (imageUrl) => {
+      console.log('redirectImageUrl', imageUrl);
+      window.open(imageUrl, '_blank');
+    }
+
 
 
     return (
@@ -139,7 +150,8 @@ const Processing = () => {
               <TableCaption>Uploaded files...</TableCaption>
               <Thead>
               <Tr>
-                  <Th>Input_Param</Th>
+                  <Th>Input_Param_Audio</Th>
+                  <Th>Input_Param_Image</Th>
                   <Th>Task_Status</Th>
                   <Th>Recheck Status</Th>
                   <Th>Task_Result</Th>
@@ -152,7 +164,12 @@ const Processing = () => {
               <Tbody>
                 {firebaseData.map((fileInfo, index) => (
                   <Tr key={index}>
-                      <Td>{fileInfo.input_param}</Td>
+                      <Td>
+                        {fileInfo.input_param_audio ? <a href={fileInfo.input_param_audio} target="_blank"> <Button> audio url </Button> </a> : 'not available'}
+                      </Td>
+                      <Td>
+                        {fileInfo.input_param_image ? <a href={fileInfo.input_param_image} target="_blank"> <Button> image url</Button>  </a> : 'not available'}
+                      </Td>
                       <Td>{fileInfo.task_status}</Td>
                       <Td> 
                         {fileInfo.task_status === 'SUCCESS' ? (<Button isDisabled='yes' colorScheme="green"> Complete </Button>) : <Button onClick={() => checkRowItem(fileInfo.task_id)} colorScheme="yellow"> Recheck status</Button>}
