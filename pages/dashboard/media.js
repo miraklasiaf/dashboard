@@ -79,9 +79,6 @@ const MediaPage = () => {
         .then(res => {
           res.items.forEach((item) => {
             getDownloadURL(item).then((url) => {
-              // // get metadata for each item 
-              // getMetadata(item).then((metadata) => {
-
               const dataCollect = {"name": item.name, "url": url};
               setfirebaseData(firebaseData => [...firebaseData, dataCollect]);
             }).catch((error) => {
@@ -354,8 +351,8 @@ const MediaPage = () => {
               <Tr>
                   <Th>Preview </Th>
                   <Th>Manage</Th>
-                  <Th>Extension</Th>
-                  <Th>File name</Th>
+                  {/* <Th>Extension</Th>
+                  <Th>File name</Th> */}
               </Tr>
               </Thead>
               <Tbody>
@@ -373,8 +370,8 @@ const MediaPage = () => {
                             />
                             <Button ml='2' colorScheme='yellow' onClick={() => modalFirebasedelete(fileInfo.name)}> Delete </Button>
                       </Td>
-                      <Td> <Badge> {fileInfo.name.split('.').pop()} </Badge> </Td>
-                      <Td>{fileInfo.name}</Td>
+                      {/* <Td> <Badge> {fileInfo.name.split('.').pop()} </Badge> </Td>
+                      <Td>{fileInfo.name}</Td> */}
                   </Tr>
                 ))}
               </Tbody>
@@ -455,7 +452,7 @@ const MediaPage = () => {
                   </GridItem>
                 </Grid>
                 <FormControl>
-                  <FormLabel mt='2'>Abbreviated name</FormLabel>
+                  <FormLabel mt='2'>File name</FormLabel>
                     <InputGroup size='md'>
                         <Input 
                           type='text'

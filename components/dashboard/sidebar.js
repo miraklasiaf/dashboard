@@ -51,11 +51,11 @@ function PageLinks() {
       <SidebarLink href="/dashboard/create" icon={UserGroup}>
         Create
       </SidebarLink>
-      <SidebarLink href="/dashboard/processed" icon={Folder}>
+      <SidebarLink href="/dashboard/tasks" icon={Folder}>
         Task Queue
       </SidebarLink>
-      <SidebarLink href="/dashboard/share" icon={Inbox}>
-        Share
+      <SidebarLink href="/dashboard/completed" icon={Inbox}>
+        Completed
       </SidebarLink>
       {/* <SidebarLink href="/dashboard/projects" icon={Folder}>
         Projects

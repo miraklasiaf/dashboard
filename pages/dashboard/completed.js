@@ -38,7 +38,7 @@ import {
 import { Grid, GridItem } from '@chakra-ui/react'
 
 
-const SharePage = () => {
+const CompletedPage = () => {
 
     const { authUser, loading, storage } = useAuthUserContext();
     const [progressInfos, setProgressInfos] = useState({ val: [] });
@@ -221,6 +221,6 @@ const SharePage = () => {
     );
   };
   
-  SharePage.getLayout = getLayout;
-  export default SharePage;
+  CompletedPage.getLayout = getLayout;
+  export default CompletedPage;
 
