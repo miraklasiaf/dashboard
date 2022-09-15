@@ -107,7 +107,8 @@ const Tasks = () => {
       axios(
         {
           method: 'get',
-          url: `http://localhost:5000/check_task/${authUser.uid}/${itemId}`,
+          // url: `http://localhost:5000/check_task/${authUser.uid}/${itemId}`,
+          url: `https://server.appliedhealthinformatics.com/check_task/${authUser.uid}/${itemId}`,
           headers: {
             'Content-Type': '*/*',
             'Accept': '*/*'
@@ -126,7 +127,8 @@ const Tasks = () => {
       axios(
         {
           method: 'get',
-          url: `http://localhost:5000/check_task/aws-batch/${authUser.uid}/${itemId}`,
+          // url: `http://localhost:5000/check_task/aws-batch/${authUser.uid}/${itemId}`,
+          url: `https://server.appliedhealthinformatics.com/check_task/aws-batch/${authUser.uid}/${itemId}`,
           headers: {
             'Content-Type': '*/*',
             'Accept': '*/*'
@@ -144,7 +146,8 @@ const Tasks = () => {
     const reCheckStatusAWS2 = (taskarn, itemId) => {
       var configPostBatchAWS = {
         method: 'post',
-        url: `http://localhost:5000/check_aws_batch_task/`,
+        // url: `http://localhost:5000/check_aws_batch_task/`,
+        url: 'https://server.appliedhealthinformatics.com/check_aws_batch_task/',
         data : {
           user_uuid: authUser?.uid,
           task_uuid: itemId,

@@ -185,7 +185,8 @@ function Create() {
     var configPost = {
       method: 'post',
       // url: 'http://localhost:5000/start-task',
-      url: 'http://20.185.51.23:5000/start-task',
+      // url: 'http://20.185.51.23:5000/start-task',
+      url: 'https://server.appliedhealthinformatics.com/start-task',
       data : {
         input_string: imageToSend.name,
         user_uuid: authUser?.uid,
@@ -216,7 +217,8 @@ function Create() {
     const configPost2 = {
       method: 'post',
       // url: 'http://localhost:5000/start-task/video1',
-      url: 'http://20.185.51.23:5000/start-task/video1',
+      // url: 'http://20.185.51.23:5000/start-task/video1',
+      url: 'https://server.appliedhealthinformatics.com/start-task/video1',
       data : {
         user_uuid: authUser?.uid,
         image_url: imageToSend.url,
@@ -252,7 +254,8 @@ function Create() {
     const configPost3 = {
       method: 'post',
       // url: 'http://localhost:5000/start-task/aws-batch/video1/',
-      url: 'http://20.185.51.23:5000/start-task/aws-batch/video1/',
+      // url: 'http://20.185.51.23:5000/start-task/aws-batch/video1/',
+      url: 'https://server.appliedhealthinformatics.com/start-task/aws-batch/video1/',
       data : {
         user_uuid: authUser?.uid,
         image_url: imageToSend.url,
