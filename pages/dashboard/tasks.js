@@ -111,7 +111,8 @@ const Tasks = () => {
           url: `https://server.appliedhealthinformatics.com/check_task/${authUser.uid}/${itemId}`,
           headers: {
             'Content-Type': '*/*',
-            'Accept': '*/*'
+            'Accept': '*/*',
+            'access-control-allow-origin': 'https://clone.appliedhealthinformatics.com' // added this for https / fastAPI / traekif   
           }
         }
       )
