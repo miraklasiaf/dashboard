@@ -159,7 +159,7 @@ const Tasks = () => {
         headers: { 
           'content-type': 'application/json',
           'accept': 'application/json',
-          'Access-Control-Allow-Origin': 'https://clone.appliedhealthinformatics.com' // added this for https / fastAPI / traekif   
+          // 'Access-Control-Allow-Origin': 'https://clone.appliedhealthinformatics.com', // added this for https / fastAPI / traekif   
       }}
 
       console.log('toSend: ', configPostBatchAWS)
