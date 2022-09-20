@@ -148,7 +148,9 @@ const Tasks = () => {
       var configPostBatchAWS = {
         method: 'post',
         // url: `http://localhost:5000/check_aws_batch_task/`,
-        url: 'https://server.appliedhealthinformatics.com/check_aws_batch_task/',
+        // url: 'https://server.appliedhealthinformatics.com/check_aws_batch_task/',
+        baseURL: 'https://server.appliedhealthinformatics.com/',
+        url: '/check_aws_batch_task',
         data : {
           user_uuid: authUser?.uid,
           task_uuid: itemId,
