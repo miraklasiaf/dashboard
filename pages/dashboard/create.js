@@ -28,6 +28,10 @@ function Create() {
       Router.push('/dashboard/create/clone')
     }
 
+    const GoToCreateVoice = () => {
+      Router.push('/dashboard/create/voice')
+    }
+
     return (
       <div>
 
@@ -41,7 +45,7 @@ function Create() {
             </GridItem>
             <GridItem w='100%' h='10'> 
               <Center>
-                <Button isDisabled='true'> Clone Voice </Button>
+                <Button onClick={GoToCreateVoice}> Clone Voice </Button>
               </Center>
             </GridItem>
             <GridItem w='100%' h='10'> 
