@@ -16,13 +16,19 @@ function Voice() {
     if (!authUser) {Router.push('/connect/login')};
   }, [authUser, loading]);
 
-  const GoToSimple = () => {
+  const GoToSimpleRecorder = () => {
     Router.push('/dashboard/create/voice/recorder/simple')
+  }
+
+  const GoToSimpleProcess = () => {
+    Router.push('/dashboard/create/voice/process/simple')
   }
 
   const GoToComplex = () => {
     Router.push('/dashboard/create/voice/recorder/complex')
   }
+
+
 
   return (
     <div>
@@ -31,7 +37,7 @@ function Voice() {
       <Box p={4}>
         <Grid templateColumns='repeat(1, 2fr)' gap={6}>
             <GridItem w='100%' h='10'> 
-                <Button onClick={GoToSimple}> Load and record simple voice questions </Button>
+                <Button onClick={GoToSimpleRecorder}> Load and record simple voice questions </Button>
             </GridItem>
             <GridItem w='100%' h='10'> 
                 <Button onClick={GoToComplex} isDisabled={true}> Load and record complex voice questions </Button> 
@@ -40,7 +46,13 @@ function Voice() {
       </Box>
 
       <Heading size='md'> Part 2: Process Audio</Heading>
-
+      <Box p={4}>
+        <Grid templateColumns='repeat(1, 2fr)' gap={6}>
+            <GridItem w='100%' h='10'> 
+                <Button onClick={GoToSimpleProcess}> Create and process a simple voice </Button>
+            </GridItem>
+        </Grid>
+      </Box>
 
     </div>
   );

@@ -67,6 +67,7 @@ function VoiceSimple() {
     useEffect(() => {
       if (loading) return;
       if (!authUser) {Router.push('/connect/login')};
+      retrieveSimple();
     }, [authUser, loading]);  
 
     useEffect(() => {
@@ -105,22 +106,9 @@ function VoiceSimple() {
         return new MediaRecorder(stream);
       }
     
-    // // this is saving locally 
-    // const saveAudio = async () => {
-    // try 
-    //     {
-    //         const result = await uploadFileSimple(audioBlobWav);
-    //         console.log(result);
-    //         onOpen();
-    //     }
-    //         catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-    
 
     const saveAudioFirebase = () => {
-      const storageRef = ref(storage, `user/${authUser?.uid}/voice/simple/${uploadFileName}`);
+      const storageRef = ref(storage, `user/${authUser?.uid}/voice/${uploadFileName}`);
       const uploadTask = uploadBytesResumable(storageRef, audioBlobWav);
       uploadTask.on("state_changed",
       (snapshot) => {
@@ -174,19 +162,23 @@ function VoiceSimple() {
         Router.push('/dashboard/media');
     }
 
+    const GoToSimpleProcess = () => {
+      Router.push('/dashboard/create/voice/process/simple')
+    }
+
     const hasBegunShort = async () => {
         setHasBegun(true);
-        setAssessmentItem('simplelist-list1-q1');
-        setQ1({'sentance': simpleList?.[0]?.sentance, 'id': 'simplelist-list1-q1', userFieldName: 'q1'});
-        setQ2({'sentance': simpleList?.[1]?.sentance, 'id': 'simplelist-list1-q2', userFieldName: 'q2'});
-        setQ3({'sentance': simpleList?.[2]?.sentance, 'id': 'simplelist-list1-q3', userFieldName: 'q3'});
-        setQ4({'sentance': simpleList?.[3]?.sentance, 'id': 'simplelist-list1-q4', userFieldName: 'q4'});
-        setQ5({'sentance': simpleList?.[4]?.sentance, 'id': 'simplelist-list1-q5', userFieldName: 'q5'});
-        setQ6({'sentance': simpleList?.[5]?.sentance, 'id': 'simplelist-list1-q6', userFieldName: 'q6'});
-        setQ7({'sentance': simpleList?.[6]?.sentance, 'id': 'simplelist-list1-q7', userFieldName: 'q7'});
-        setQ8({'sentance': simpleList?.[7]?.sentance, 'id': 'simplelist-list1-q8', userFieldName: 'q8'});
-        setQ9({'sentance': simpleList?.[8]?.sentance, 'id': 'simplelist-list1-q9', userFieldName: 'q9'});
-        setQ10({'sentance': simpleList?.[9]?.sentance, 'id': 'simplelist-list1-q10', userFieldName: 'q10'});
+        setAssessmentItem('list1-q1');
+        setQ1({'sentance': simpleList?.[0]?.sentance, 'id': simpleList?.[0]?.id, userFieldName: simpleList?.[0]?.userFieldName});
+        setQ2({'sentance': simpleList?.[1]?.sentance, 'id': simpleList?.[1]?.id, userFieldName: simpleList?.[1]?.userFieldName});
+        setQ3({'sentance': simpleList?.[2]?.sentance, 'id': simpleList?.[2]?.id, userFieldName: simpleList?.[2]?.userFieldName});
+        setQ4({'sentance': simpleList?.[3]?.sentance, 'id': simpleList?.[3]?.id, userFieldName: simpleList?.[3]?.userFieldName});
+        setQ5({'sentance': simpleList?.[4]?.sentance, 'id': simpleList?.[4]?.id, userFieldName: simpleList?.[4]?.userFieldName});
+        setQ6({'sentance': simpleList?.[5]?.sentance, 'id': simpleList?.[5]?.id, userFieldName: simpleList?.[5]?.userFieldName});
+        setQ7({'sentance': simpleList?.[6]?.sentance, 'id': simpleList?.[6]?.id, userFieldName: simpleList?.[6]?.userFieldName});
+        setQ8({'sentance': simpleList?.[7]?.sentance, 'id': simpleList?.[7]?.id, userFieldName: simpleList?.[7]?.userFieldName});
+        setQ9({'sentance': simpleList?.[8]?.sentance, 'id': simpleList?.[8]?.id, userFieldName: simpleList?.[8]?.userFieldName});
+        setQ10({'sentance': simpleList?.[9]?.sentance, 'id': simpleList?.[9]?.id, userFieldName: simpleList?.[9]?.userFieldName});
         setQ11({'id': 'complete'});
     }
 
@@ -246,7 +238,7 @@ function VoiceSimple() {
 
 
   const assessmentItemlogic = () => {
-    if (assessmentItem === 'simplelist-list1-q1') {
+    if (assessmentItem === 'list1-q1') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -254,7 +246,7 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q1.userFieldName} nextItemId={q2.id} nextItemName={q2.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q2') {
+    } else if (assessmentItem === 'list1-q2') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -262,7 +254,7 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q2.userFieldName} nextItemId={q3.id} nextItemName={q3.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q3') {
+    } else if (assessmentItem === 'list1-q3') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -270,7 +262,7 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q3.userFieldName} nextItemId={q4.id} nextItemName={q4.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q4') {
+    } else if (assessmentItem === 'list1-q4') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -278,7 +270,7 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q4.userFieldName} nextItemId={q5.id} nextItemName={q5.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q5') {
+    } else if (assessmentItem === 'list1-q5') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -286,7 +278,7 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q5.userFieldName} nextItemId={q6.id} nextItemName={q6.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q6') {
+    } else if (assessmentItem === 'list1-q6') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -294,7 +286,7 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q6.userFieldName} nextItemId={q7.id} nextItemName={q7.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q7') {
+    } else if (assessmentItem === 'list1-q7') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -302,7 +294,7 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q7.userFieldName} nextItemId={q8.id} nextItemName={q8.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q8') {
+    } else if (assessmentItem === 'list1-q8') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -310,7 +302,7 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q8.userFieldName} nextItemId={q9.id} nextItemName={q9.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q9') {
+    } else if (assessmentItem === 'list1-q9') {
       return (
         <div>
           <strong> Sentance: </strong>
@@ -318,18 +310,20 @@ function VoiceSimple() {
           <AudioRecorderCustom starRecordValue={q9.userFieldName} nextItemId={q10.id} nextItemName={q10.userFieldName} />
         </div>
       )
-    } else if (assessmentItem === 'simplelist-list1-q10') {
+    } else if (assessmentItem === 'list1-q10') {
       return (
         <div>
           <strong> Sentance: </strong>
           <p>{q10?.sentance}</p>
-          <AudioRecorderCustom starRecordValue={q10.userFieldName} />
+          <AudioRecorderCustom starRecordValue={q10.userFieldName} nextItemId={q11.id} nextItemName='Completed!' />
         </div>
       )
     } else if (assessmentItem === 'complete') {
       return (
         <div>
           <strong> You have completed the simple recordings list! </strong>
+          <br />
+          <Button onClick={GoToSimpleProcess}> Begin to process your voice! </Button>
         </div>
       )
     } 
@@ -338,15 +332,6 @@ function VoiceSimple() {
     
   return (
     <div>
-
-      {!hasBegun && !simpleList && (
-        <Button mr='5' onClick={retrieveSimple}>
-          Initiate simple voice recording session...
-        </Button>
-      )}
-
-      <br />
-
 
       {simpleList && !hasBegun && (
         <div>
