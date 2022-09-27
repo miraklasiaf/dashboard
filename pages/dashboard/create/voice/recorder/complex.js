@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRouter } from 'next/router';
-import { useAuthUserContext } from '../../../../context/AuthUserContext';
+import { useAuthUserContext } from '../../../../../context/AuthUserContext';
 import { getLayout } from '@/layouts/dashboard';
 
 function Voice() {
@@ -14,7 +14,7 @@ function Voice() {
 
   return (
     <div>
-        Logged in and viewing the voice page - complex ...
+        Future component....
     </div>
   );
 }
