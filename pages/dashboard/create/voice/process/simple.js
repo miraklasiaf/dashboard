@@ -78,7 +78,6 @@ function SimpleProcess() {
 
     const handleSaveMetaDataFile = async (textFile) => {
         const fileName = "metaData_list1_" + new Date().getTime() + ".txt";
-        // const blob = new Blob(textFile, {type: "text/plain;charset=utf-8"});
         const blob = new Blob(textFile, {type:"text/plain;charset=utf-8", lastModified:new Date()});
         const file = new File([blob], fileName, {type:"text/plain;charset=utf-8", lastModified:new Date()});
         const storageRef = ref(storage, `user/${authUser?.uid}/voice/${fileName}`);
@@ -88,14 +87,11 @@ function SimpleProcess() {
 
 
     const testSubmitButton = async () => {
-
         console.log('initialChecked: ', checkedRows);
         console.log('initialCheckedValues: ', checkedRowsValues);
         console.log('initialCheckedValuesUrls: ', checkedRowsValuesUrls);
-
         // create a new array that pulls matching items from simpleList and checkRows
         const filteredTemp = simpleList.filter(item => checkedRowsValues.includes(item.id));
-        
         // create new array that adds checkRows values to matching simpleList items based on simpleList id
         filteredTemp.forEach((item) => {
             firebaseData.forEach((data) => {
@@ -106,19 +102,20 @@ function SimpleProcess() {
             })
         }
         )
-
         console.log('filteredTemp: ', filteredTemp);
-
         // create custom text file that loops through filteredTemp and create a new line for each item, keeping name | sentance
         const textFile = filteredTemp.map((item) => {
-            return item.name + ' | ' + item.sentance;
-        }
+            // return item.name and item.sentance and then add a new blank line
+            return item.name + " | " + item.sentance + " \n" 
+            }
         )
-
         console.log('textFile: ', textFile);
         handleSaveMetaDataFile(textFile);
-
+        console.log('...done, sent to firebase');
     }
+
+
+
 
 
     const clearSelections = () => {
@@ -127,10 +124,10 @@ function SimpleProcess() {
         Router.reload();
     }
 
-    const selectedAllRows = () => {
-        setAllChecked(true);
-        setCheckedRows(firebaseData.map(item => item.name));
-    }
+    // const selectedAllRows = () => {
+    //     setAllChecked(true);
+    //     setCheckedRows(firebaseData.map(item => item.name));
+    // }
 
 
     const retrieveSimple = async () => {
@@ -209,7 +206,7 @@ function SimpleProcess() {
         )}
 
         <br/>
-        <Button onClick={testSubmitButton}> Test Submit Button </Button>
+        <Button mt='10' onClick={testSubmitButton}> Test Submit Button </Button>
         <br />
 
         <br />
