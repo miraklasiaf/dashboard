@@ -7,6 +7,7 @@ function Voice() {
   const { authUser, loading } = useAuthUserContext();
   const Router = useRouter();
 
+
   useEffect(() => {
     if (loading) return;
     if (!authUser) {Router.push('/connect/login')};
