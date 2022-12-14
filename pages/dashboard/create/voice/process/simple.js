@@ -77,7 +77,7 @@ function SimpleProcess() {
 
 
     const handleSaveMetaDataFile = async (textFile) => {
-        const fileName = "metaData_list1_" + new Date().getTime() + ".txt";
+        const fileName = "metaData_list_" + new Date().getTime() + ".txt";
         const blob = new Blob(textFile, {type:"text/plain;charset=utf-8", lastModified:new Date()});
         const file = new File([blob], fileName, {type:"text/plain;charset=utf-8", lastModified:new Date()});
         const storageRef = ref(storage, `user/${authUser?.uid}/voice/${fileName}`);
@@ -106,7 +106,11 @@ function SimpleProcess() {
         // create custom text file that loops through filteredTemp and create a new line for each item, keeping name | sentance
         const textFile = filteredTemp.map((item) => {
             // return item.name and item.sentance and then add a new blank line
-            return item.name + " | " + item.sentance + " \n" 
+            // remove .wav from each item.name
+            item.name = item.name.replace(".wav", "");
+            return item.name + "|" + item.sentance + ". \n" 
+            // return item.name + " | " + "blank | " + item.sentance + " \n" 
+
             }
         )
         console.log('textFile: ', textFile);
@@ -115,14 +119,29 @@ function SimpleProcess() {
     }
 
 
-
-
-
-    const clearSelections = () => {
-        setCheckedRows([]);
-        setAllChecked(false);
-        Router.reload();
+    // create a select all rows function
+    const selectAllRows = () => {
+        setAllChecked(true);
+        setCheckedRows(firebaseData.map(item => item.name));
+        setCheckedRowsValues(firebaseData.map(item => item.name.split("_")[0]));
+        setCheckedRowsValuesUrls(firebaseData.map(item => item.url));
     }
+
+
+    // create a clear all rows function
+    const clearSelections = () => {
+        setAllChecked(false);
+        setCheckedRows([]);
+        setCheckedRowsValues([]);
+        setCheckedRowsValuesUrls([]);
+    }
+
+
+    // const clearSelections = () => {
+    //     setCheckedRows([]);
+    //     setAllChecked(false);
+    //     Router.reload();
+    // }
 
     // const selectedAllRows = () => {
     //     setAllChecked(true);
@@ -131,7 +150,7 @@ function SimpleProcess() {
 
 
     const retrieveSimple = async () => {
-        const simpleData = await fetch('https://server.appliedhealthinformatics.com/sentances/list/1')
+        const simpleData = await fetch('https://server.appliedhealthinformatics.com/sentances')
         .then(response => response.json())
         // catch error
         .catch(error => console.log(error))
@@ -223,6 +242,10 @@ function SimpleProcess() {
         {checkedRows.length > 0 && (
             <Button> Process with selected rows </Button>
         )} */}
+
+        {/* create a select all rows toggle */}
+        <br />
+        <Button onClick={selectAllRows}> Select all rows </Button>
         
 
         <TableContainer mt='50'>

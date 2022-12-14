@@ -45,7 +45,7 @@ function Voice() {
     var count = 0;
     for (var i = 0; i < firebaseData.length; i++) {
       if (firebaseData[i].name.includes(".txt")) {
-        console.log("excluded")
+        // console.log("excluded")
       } else {
         count++;
       }
@@ -66,7 +66,7 @@ function Voice() {
         uniqueListNames.push(name);
       }
     }
-    console.log({'uniqueListNames': uniqueListNames})
+    // console.log({'uniqueListNames': uniqueListNames})
 
     // for every item in uniqueListnames, keep only the values before the hyphen and then count the number of times it appears in the array
     var uniqueCountNames = [];
@@ -75,12 +75,12 @@ function Voice() {
       var name = name.substring(0, name.indexOf("-"));
       uniqueCountNames.push(name);
     }
-    console.log({'uniqueCountNames': uniqueCountNames})
+    // console.log({'uniqueCountNames': uniqueCountNames})
 
     // count the number of times each item appears in the array
     var counts = [];
     uniqueCountNames.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
-    console.log({'counts': counts})
+    // console.log({'counts': counts})
 
     // // if each value in counts is not equal to 10, add in a percent column and calculate the percentage out of 10, else add in a percent column and set it to 100
     // for (var key in counts) {
@@ -100,18 +100,18 @@ function Voice() {
       countsArray.push({name: key, count: counts[key], percentCompleted: percentCompleted});
 
     }
-    console.log({'countsArray1': countsArray})
+    // console.log({'countsArray1': countsArray})
 
     var listsToCheck = ['list1', 'list2', 'list3', 'list4', 'list5', 'list6', 'list7', 'list8', 'list9', 'list10'];
     // if countsArray does not contain all the lists, add them to the array with a count of 0
     for (var i = 0; i < listsToCheck.length; i++) {
       if (countsArray.some(e => e.name === listsToCheck[i])) {
-        console.log("list exists")
+        // console.log("list exists")
       } else {
         countsArray.push({name: listsToCheck[i], count: 0, percentCompleted: 0});
       }
     }
-    console.log({'countsArray2': countsArray})
+    // console.log({'countsArray2': countsArray})
     
 
 
@@ -132,7 +132,9 @@ function Voice() {
     Router.push('/dashboard/create/voice/recorder/complex')
   }
 
-  const ListtoComplete = (listNumberString) => {
+  const ListtoComplete = (itemname) => {
+    var listNumberString = itemname.slice(-1);
+    console.log({'to send': listNumberString})
     Router.push({
       pathname: '/dashboard/create/voice/recorder/list',
       query: {list: listNumberString}
@@ -152,63 +154,45 @@ function Voice() {
             
         <br />
 
-        {getUniqueListNames().countsArray.map((item, index) => {
+        {/* {getUniqueListNames().countsArray.map((item, index) => {
               return (
                 <div key={index}>
                         <Text> Total recordings from <strong> {item?.name} </strong> saved: {item?.count}; percent completed: {item?.percentCompleted}% </Text>
                 </div>
               )
             }
-            )}
+            )} */}
 
       </div>
 
       <br />
-      <Heading> Complete lists...</Heading>
-      <p> The point of this section is to diversity the sound samples for creating a realistic voice. </p>
-      <p> In order to do so we have 10 lists, each with 10 sentances that you must record yourself saying. </p> 
-      <p> This will provide us with 100 audio samples that are phonetically diverse.  </p>
-           
+
+      {/* create two columns with 2em between them */}
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <div>
-          <Button margin='1em' onClick={() => ListtoComplete('1')}> List 1 </Button>
-          <Button margin='1em'onClick={() => ListtoComplete('2')}> List 2 </Button>
-          <Button margin='1em'onClick={() => ListtoComplete('3')}> List 3 </Button>
-          <Button margin='1em'onClick={() => ListtoComplete('4')}> List 4 </Button>
-          <br />
-          <Button margin='1em'onClick={() => ListtoComplete('5')}> List 5 </Button>
-          <Button margin='1em'onClick={() => ListtoComplete('6')}> List 6 </Button>
-          <Button margin='1em'onClick={() => ListtoComplete('7')}> List 7 </Button>
-          <Button margin='1em'onClick={() => ListtoComplete('8')}> List 8 </Button>
+          <Heading> Simple voice training </Heading>
+          <p> The point of this section is to create a simple voice that can be used for testing purposes. </p>
+          <p> In order to do so we have 10 sentances that you must record yourself saying. </p>
+          <p> This will provide us with 10 audio samples that are phonetically diverse.  </p>
           <br/>
-          <Button margin='1em'onClick={() => ListtoComplete('9')}> List 9 </Button>
-          <Button margin='1em'onClick={() => ListtoComplete('10')}> List 10 </Button>
-
+          <Button backgroundColor='blue.500' onClick={GoToSimpleProcess} marginBottom='2em'> Click here once you have completed at least 5 lists to create and process a simple voice </Button>
+          <br />  
+          <p> The lists you <strong> have and have not yet  </strong> completed:</p>
+            { getUniqueListNames().countsArray.map((item, index) => {
+                return (
+                  <div key={index}>
+                    {item?.percentCompleted < 100 ? 
+                      <Button margin='1em' onClick={() => ListtoComplete(item?.name)} backgroundColor='yellow.500'> {item?.name} - incomplete </Button> :
+                      <Button margin='1em' onClick={() => ListtoComplete(item?.name)} backgroundColor='green.500'> {item?.name} - completed </Button>
+                    }
+                  </div>
+                )
+              }
+              )
+            }
         </div>
-             
-      
 
-      <Heading size='lg' marginTop={'1em'} marginBottom={'1em'}  > Record </Heading>
-      <Heading size='md' marginTop={'-1em'}> Part 1: Record Audio (OLD SECTION TO DELETE) </Heading>
-      <Box p={4}>
-        <Grid templateColumns='repeat(1, 2fr)' gap={6}>
-            <GridItem w='100%' h='10'> 
-                <Button onClick={GoToSimpleRecorder}> Load and record simple voice questions (list-1 only) </Button>
-            </GridItem>
-            <GridItem w='100%' h='10'> 
-                <Button onClick={GoToComplex}> Load and record complex voice questions </Button> 
-            </GridItem>
-          </Grid>
-      </Box>
-
-      <br />
-      <Heading size='lg'> Process Audio</Heading>
-      <Box p={4}>
-        <Grid templateColumns='repeat(1, 2fr)' gap={6}>
-            <GridItem w='100%' h='10'> 
-                <Button onClick={GoToSimpleProcess}> Create and process a simple voice </Button>
-            </GridItem>
-        </Grid>
-      </Box>
+      </div>
 
     </div>
   );
