@@ -80,16 +80,6 @@ function Voice() {
     // count the number of times each item appears in the array
     var counts = [];
     uniqueCountNames.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
-    // console.log({'counts': counts})
-
-    // // if each value in counts is not equal to 10, add in a percent column and calculate the percentage out of 10, else add in a percent column and set it to 100
-    // for (var key in counts) {
-    //   if (counts[key] < 10) {
-    //     counts[key] = counts[key] * 10;
-    //   } else {
-    //     counts[key] = 100;
-    //   }
-    // }
 
     // count the number of times each item appears in the array and save it as an array, with each item being an object with the name and the count
     var countsArray = [];
@@ -112,28 +102,17 @@ function Voice() {
       }
     }
     // console.log({'countsArray2': countsArray})
-    
-
-
     return {uniqueListNames, counts, countsArray};
   }
 
-
-
-  const GoToSimpleRecorder = () => {
-    Router.push('/dashboard/create/voice/recorder/simple')
-  }
 
   const GoToSimpleProcess = () => {
     Router.push('/dashboard/create/voice/process/simple')
   }
 
-  const GoToComplex = () => {
-    Router.push('/dashboard/create/voice/recorder/complex')
-  }
-
   const ListtoComplete = (itemname) => {
-    var listNumberString = itemname.slice(-1);
+    // keep characters after the last t in the string
+    var listNumberString = itemname.substring(itemname.lastIndexOf("t") + 1);
     console.log({'to send': listNumberString})
     Router.push({
       pathname: '/dashboard/create/voice/recorder/list',
@@ -141,28 +120,13 @@ function Voice() {
     })
   }
 
-
-
   return (
     <div>
 
       <div>
         <Heading size='lg'> Recording Metrics </Heading>
-        
-        
         <Text> Total number of <strong> recorded voice files </strong> : {countItems()} </Text>
-            
         <br />
-
-        {/* {getUniqueListNames().countsArray.map((item, index) => {
-              return (
-                <div key={index}>
-                        <Text> Total recordings from <strong> {item?.name} </strong> saved: {item?.count}; percent completed: {item?.percentCompleted}% </Text>
-                </div>
-              )
-            }
-            )} */}
-
       </div>
 
       <br />

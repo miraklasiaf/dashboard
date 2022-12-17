@@ -10,6 +10,8 @@ import { Button, Badge, Tag} from '@chakra-ui/react'
 
 import ReactAudioPlayer from 'react-audio-player';
 
+import { saveAs } from 'file-saver';
+
 import {
     Table,
     Thead,
@@ -108,14 +110,21 @@ function SimpleProcess() {
             // return item.name and item.sentance and then add a new blank line
             // remove .wav from each item.name
             item.name = item.name.replace(".wav", "");
-            return item.name + "|" + item.sentance + ". \n" 
-            // return item.name + " | " + "blank | " + item.sentance + " \n" 
+            // return item.name + "|" + item.sentance + ". \n" 
+            return item.name + "| " + "blank | " + item.sentance + ". \n" 
 
             }
         )
         console.log('textFile: ', textFile);
         handleSaveMetaDataFile(textFile);
         console.log('...done, sent to firebase');
+
+        // allow user to download the file
+        const blob = new Blob(textFile, {type:"text/plain;charset=utf-8", lastModified:new Date()});
+        const file = new File([blob], "metaData_list.txt", {type:"text/plain;charset=utf-8", lastModified:new Date()});
+        saveAs(file);
+
+
     }
 
 
@@ -125,6 +134,12 @@ function SimpleProcess() {
         setCheckedRows(firebaseData.map(item => item.name));
         setCheckedRowsValues(firebaseData.map(item => item.name.split("_")[0]));
         setCheckedRowsValuesUrls(firebaseData.map(item => item.url));
+        // set all toggles in table to checked
+        const toggles = document.querySelectorAll('.toggle');
+        toggles.forEach((toggle) => {
+            toggle.checked = true;
+        }
+        )
     }
 
 
@@ -134,6 +149,13 @@ function SimpleProcess() {
         setCheckedRows([]);
         setCheckedRowsValues([]);
         setCheckedRowsValuesUrls([]);
+        // reset all toggles in table
+        const toggles = document.querySelectorAll('.toggle');
+        toggles.forEach((toggle) => {
+            toggle.checked = false;
+        }
+        )
+
     }
 
 
@@ -190,90 +212,85 @@ function SimpleProcess() {
 
 
     return (
+
+
     <div>
 
         <Heading size='md'> Simple Voice Processing</Heading>
 
-        <br />
-        <p> <strong> Rows selected for processing Full Name: </strong> </p>
-
         {checkedRows.length > 0 && checkedRows.map((item) => {
             return (
-                <Badge colorScheme='green' ml='2'> {item} </Badge>
+                <div>
+                    <Badge colorScheme='green' ml='2'> {item} </Badge>
+                </div>
             )
             }
         )}
         
         <br />
-        <p> <strong> Rows selected for processing Short Name: </strong> </p>
-
-        {checkedRowsValues.length > 0 && checkedRowsValues.map((item) => {
-            return (
-                <Badge colorScheme='red' ml='2'> {item} </Badge>
-            )
-            }
-        )}
-
-        <br />
-        <p> <strong> Rows selected for processing URLs: </strong> </p>
 
         {checkedRowsValuesUrls.length > 0 && checkedRowsValuesUrls.map((item) => {
             return (
-                <Badge colorScheme='purple' ml='2'> {item} </Badge>
+                <div>
+                    <Badge colorScheme='purple' ml='2'> {item} </Badge>
+                </div>
             )
             }
         )}
 
         <br/>
-        <Button mt='10' onClick={testSubmitButton}> Test Submit Button </Button>
-        <br />
+
+        {/* if checkedRows is null, turn off test submit button, otherwise have it on */}
+        {checkedRows.length > 4 ? (
+            <Button backgroundColor='green.500' mt='10' onClick={testSubmitButton}> Test Submit Button </Button>
+        ) : (
+            <Button mt='10' onClick={testSubmitButton} isDisabled> Submit! Please select at least 5 </Button>
+        )}
 
         <br />
-        {checkedRows.length > 0 && (
+ 
+        
+
+        <br />
+        {allChecked && (
             <Button onClick={clearSelections}> Clear selections </Button>
         )}
         <br />
 
-        {/* <br />
-        <Button onClick={selectedAllRows}> Select all </Button>
-        <br /> */}
-
-        {/* <br />
-        {checkedRows.length > 0 && (
-            <Button> Process with selected rows </Button>
-        )} */}
-
-        {/* create a select all rows toggle */}
-        <br />
+        {(!allChecked && checkedRows.length < 1 )&& (
         <Button onClick={selectAllRows}> Select all rows </Button>
-        
+        )}
 
-        <TableContainer mt='50'>
-            <Table variant='simple' maxWidth='100%' display='block' overflowX='auto'>
-                <Thead>
-                <Tr>
-                    <Th>Name</Th>
-                    <Th>Include</Th>
-                    <Th>Preview </Th>
-                </Tr>
-                </Thead>
-                <Tbody>
-                    {firebaseData.sort((a, b) => (a.name > b.name) ? 1 : -1).map((fileInfo, index) => (
-                    <Tr key={index}>
-                        <Td> {fileInfo.name} </Td>
-                        <Td> 
-                            {!allChecked ? (
-                                <Switch value={fileInfo.name} id={fileInfo.url} onChange={handleCheck} colorScheme='green'>  </Switch>
-                            ) : (
-                                <Switch value={fileInfo.name} id={fileInfo.url} onChange={handleCheck} colorScheme='green' isChecked>  </Switch>
-                            )}
-                        </Td>
-                        <Td> {PreviewFile(fileInfo.url)} </Td>
+
+    
+        {!allChecked && (
+            <TableContainer mt='50'>
+                <Table variant='simple' maxWidth='100%' display='block' overflowX='auto'>
+                    <Thead>
+                    <Tr>
+                        <Th>Name</Th>
+                        <Th>Include</Th>
+                        <Th>Preview </Th>
                     </Tr>
-                    ))}
-                </Tbody>
-            </Table>
-        </TableContainer>
+                    </Thead>
+                    <Tbody>
+                        {firebaseData.sort((a, b) => (a.name > b.name) ? 1 : -1).map((fileInfo, index) => (
+                        <Tr key={index}>
+                            <Td> {fileInfo.name} </Td>
+                            <Td> 
+                                {!allChecked ? (
+                                    <Switch value={fileInfo.name} id={fileInfo.url} onChange={handleCheck} colorScheme='green'>  </Switch>
+                                ) : (
+                                    <Switch value={fileInfo.name} id={fileInfo.url} onChange={handleCheck} colorScheme='green' isChecked>  </Switch>
+                                )}
+                            </Td>
+                            <Td> {PreviewFile(fileInfo.url)} </Td>
+                        </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
+            </TableContainer>
+        )}
 
 
 
