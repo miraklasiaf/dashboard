@@ -111,7 +111,7 @@ function SimpleProcess() {
             // remove .wav from each item.name
             item.name = item.name.replace(".wav", "");
             // return item.name + "|" + item.sentance + ". \n" 
-            return item.name + "| " + "blank | " + item.sentance + ". \n" 
+            return item.name + "|" + item.sentance + ".|" + item.sentance + ". \n" 
 
             }
         )
