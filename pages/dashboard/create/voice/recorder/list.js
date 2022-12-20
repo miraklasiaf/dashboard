@@ -171,6 +171,10 @@ function VoiceList() {
       Router.push('/dashboard/create/voice/process/simple')
     }
 
+    const ReturnToListSelection = () => {
+      Router.push('/dashboard/create/voice')
+    }
+
     const hasBegunShort = async () => {
         setHasBegun(true);
         setAssessmentItem(queryList + '-q1');
@@ -328,6 +332,7 @@ function VoiceList() {
         <div>
           <strong> You have completed the simple recordings list! </strong>
           <br />
+          <Button onClick={ReturnToListSelection}> Return to list selection </Button>
           <Button onClick={GoToSimpleProcess}> Begin to process your voice! </Button>
         </div>
       )

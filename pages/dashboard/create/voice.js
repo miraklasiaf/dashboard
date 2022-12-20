@@ -92,7 +92,22 @@ function Voice() {
     }
     // console.log({'countsArray1': countsArray})
 
-    var listsToCheck = ['list1', 'list2', 'list3', 'list4', 'list5', 'list6', 'list7', 'list8', 'list9', 'list10'];
+    var listsToCheck = ['list1', 'list2', 'list3', 'list4', 'list5', 'list6', 'list7', 'list8', 'list9', 'list10',
+      'list11', 'list12', 'list13', 'list14', 'list15', 'list16', 'list17', 'list18', 'list19', 'list20',
+      'list21', 'list22', 'list23', 'list24', 'list25', 'list26', 'list27', 'list28', 'list29', 'list30',
+      'list31', 'list32', 'list33', 'list34', 'list35', 'list36', 'list37', 'list38', 'list39', 'list40',
+      'list41', 'list42', 'list43', 'list44', 'list45', 'list46', 'list47', 'list48', 'list49', 'list50',
+      'list51', 'list52', 'list53', 'list54', 'list55', 'list56', 'list57', 'list58', 'list59', 'list60',
+      'list61', 'list62', 'list63', 'list64', 'list65', 'list66', 'list67', 'list68', 'list69', 'list70',
+      'list71', 'list72',
+      'list200', 'list201', 'list202', 'list203', 'list204', 'list205', 'list206', 'list207', 'list208', 'list209', 'list210',
+      'list211', 'list212', 'list213', 'list214', 'list215', 'list216', 'list217', 'list218', 'list219', 'list220',
+      'list221', 'list222', 'list223', 'list224', 'list225', 'list226', 'list227', 'list228', 'list229', 'list230',
+      'list231', 'list232', 'list233', 'list234', 'list235', 'list236', 'list237', 'list238', 'list239', 'list240',
+      'list241', 'list242', 'list243', 'list244', 'list245', 'list246', 'list247', 'list248', 'list249', 'list250',
+      'list251', 'list252', 'list253', 'list254', 'list255', 'list256', 'list257', 'list258', 'list259', 'list260',
+      'list261', 'list262', 'list263', 'list264', 'list265', 'list266', 'list267', 'list268', 'list269', 'list270',
+      'list271', 'list272',];
     // if countsArray does not contain all the lists, add them to the array with a count of 0
     for (var i = 0; i < listsToCheck.length; i++) {
       if (countsArray.some(e => e.name === listsToCheck[i])) {

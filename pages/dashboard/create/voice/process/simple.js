@@ -33,9 +33,10 @@ function SimpleProcess() {
     const [checkedRows, setCheckedRows] = useState([]);
     const [checkedRowsValues, setCheckedRowsValues] = useState([]);
     const [checkedRowsValuesUrls, setCheckedRowsValuesUrls] = useState([]);
+    const [completedList, setCompletedList] = useState([]);
     const [allChecked, setAllChecked] = useState(false);
-    const [filtered1, setFiltered1] = useState([]);
-    const [filtered2, setFiltered2] = useState([]);
+    // const [filtered1, setFiltered1] = useState([]);
+    // const [filtered2, setFiltered2] = useState([]);
 
     const firebaseDataretrieve = () => {
     setfirebaseData([]);
@@ -54,27 +55,60 @@ function SimpleProcess() {
         })
     }
 
-
-    const handleCheck = (e) => {
-        const { checked } = e.target;
-        const { value } = e.target;
-        const { id } = e.target;
-
-        // create simple value that only contains the characters before the first underscore
-        const simpleValue = value.split("_")[0];
-        console.log(checked);
-        console.log(value);
-        console.log(id);
-        if (checked) {
-            setCheckedRows(checkedRows => [...checkedRows, value]);
-            setCheckedRowsValues(checkedRowsValues => [...checkedRowsValues, simpleValue]);
-            setCheckedRowsValuesUrls(checkedRowsValuesUrls => [...checkedRowsValuesUrls, id]);
-        } else {
-            setCheckedRows(checkedRows.filter(item => item !== value));
-            setCheckedRowsValues(checkedRowsValues.filter(item => item !== simpleValue));
-            setCheckedRowsValuesUrls(checkedRowsValuesUrls.filter(item => item !== id));
-        }
+    const retrieveSimple = () => {       
+        // perform fetch with header Access-Control-Allow-Origin
+        fetch('https://server.appliedhealthinformatics.com/sentances', {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }) 
+        .then(response => response.json())
+        // catch error
+        .catch(error => console.log(error))
+        .then(data => {
+            console.log('data retrieved: ', data);
+            setSimpleList(data);
+        });
     }
+
+    const getListCompleted = () => {
+        const filteredTemp = simpleList;
+        // create new array that adds checkRows values to matching simpleList items based on simpleList id
+        filteredTemp.forEach((item) => {
+            firebaseData.forEach((data) => {
+                if (data.name.includes(item.id)) {
+                    item.url = data.url;
+                    item.name = data.name;
+                }
+            })
+        }
+        )
+        setCompletedList(filteredTemp);
+    }
+
+
+    // const handleCheck = (e) => {
+    //     const { checked } = e.target;
+    //     const { value } = e.target;
+    //     const { id } = e.target;
+
+    //     // create simple value that only contains the characters before the first underscore
+    //     const simpleValue = value.split("_")[0];
+    //     console.log(checked);
+    //     console.log(value);
+    //     console.log(id);
+    //     if (checked) {
+    //         setCheckedRows(checkedRows => [...checkedRows, value]);
+    //         setCheckedRowsValues(checkedRowsValues => [...checkedRowsValues, simpleValue]);
+    //         setCheckedRowsValuesUrls(checkedRowsValuesUrls => [...checkedRowsValuesUrls, id]);
+    //     } else {
+    //         setCheckedRows(checkedRows.filter(item => item !== value));
+    //         setCheckedRowsValues(checkedRowsValues.filter(item => item !== simpleValue));
+    //         setCheckedRowsValuesUrls(checkedRowsValuesUrls.filter(item => item !== id));
+    //     }
+    // }
 
 
 
@@ -128,6 +162,94 @@ function SimpleProcess() {
     }
 
 
+    const testSubmitButon2 = async () => {
+        console.log('initialChecked: ', checkedRows);
+        console.log('initialCheckedValues: ', checkedRowsValues);
+        console.log('initialCheckedValuesUrls: ', checkedRowsValuesUrls);
+        // create a new array that pulls matching items from simpleList and checkRows
+        const filteredTemp = simpleList
+        // create new array that adds checkRows values to matching simpleList items based on simpleList id
+        filteredTemp.forEach((item) => {
+            firebaseData.forEach((data) => {
+                if (data.name.includes(item.id)) {
+                    item.url = data.url;
+                    item.name = data.name;
+                }
+            })
+        }
+        )
+        const textFile = filteredTemp.map((item) => {
+            item.name = item.name.replace(".wav", "");
+            return item.name + "|" + item.sentance + ".|" + item.sentance + ". \n"
+            }
+        )
+        console.log('textFile: ', textFile);
+        handleSaveMetaDataFile(textFile);
+        console.log('...done, sent to firebase');
+
+        // allow user to download the file
+        const blob = new Blob(textFile, {type:"text/plain;charset=utf-8", lastModified:new Date()});
+        const file = new File([blob], "metaData_list.txt", {type:"text/plain;charset=utf-8", lastModified:new Date()});
+        saveAs(file);
+    }
+
+
+    const testSubmitButton3 = async () => {
+        console.log('completedList: ', completedList);
+        // create custom text file that loops through filteredTemp and create a new line for each item, keeping name | sentance
+        const textFile = completedList.map((item) => {
+            // return item.name and item.sentance and then add a new blank line
+            // remove .wav from each item.name
+            item.name = item.name.replace(".wav", "");
+            // return item.name + "|" + item.sentance + ". \n" 
+            return item.name + "|" + item.sentance + ".|" + item.sentance + ". \n" 
+
+            }
+        )
+        console.log('textFile: ', textFile);
+        handleSaveMetaDataFile(textFile);
+        console.log('...done, sent to firebase');
+
+        // allow user to download the file
+        const blob = new Blob(textFile, {type:"text/plain;charset=utf-8", lastModified:new Date()});
+        const file = new File([blob], "metaData_list.txt", {type:"text/plain;charset=utf-8", lastModified:new Date()});
+        saveAs(file);
+
+
+    }
+
+
+    const testSubmitButton4 = () => {
+        // const simpleValue = value.split("_")[0];
+        // keep only items that are a match between firebaseData and simpleList
+        console.log('initialChecked: ', checkedRowsValues);
+        var filteredTemp = simpleList.filter(item => checkedRowsValues.map(data => data.name).includes(item.id));
+        // create custom text file that loops through filteredTemp and create a new line for each item, keeping name | sentance
+        var textFile = filteredTemp.map((item) => {
+            // return item.name and item.sentance and then add a new blank line
+            // remove .wav from each item.name
+            item.name = item.name.replace(".wav", "");
+            // return item.name + "|" + item.sentance + ". \n"
+            return item.name + "|" + item.sentance + ".|" + item.sentance + ". \n"
+            }
+        )
+        console.log('textFile: ', textFile);
+        handleSaveMetaDataFile(textFile);
+        console.log('...done, sent to firebase');
+
+        // allow user to download the file
+        const blob = new Blob(textFile, {type:"text/plain;charset=utf-8", lastModified:new Date()});
+        const file = new File([blob], "metaData_list.txt", {type:"text/plain;charset=utf-8", lastModified:new Date()});
+        saveAs(file);
+        
+    }
+
+
+
+
+
+
+
     // create a select all rows function
     const selectAllRows = () => {
         setAllChecked(true);
@@ -165,49 +287,40 @@ function SimpleProcess() {
     //     Router.reload();
     // }
 
-    // const selectedAllRows = () => {
-    //     setAllChecked(true);
-    //     setCheckedRows(firebaseData.map(item => item.name));
+    const selectedAllRows = () => {
+        setAllChecked(true);
+        setCheckedRows(firebaseData.map(item => item.name));
+    }
+
+
+
+
+
+    // const PreviewFile = (rowUrl) => {
+    // if (rowUrl.includes('.jpg') || rowUrl.includes('.jpeg') || rowUrl.includes('.png') || rowUrl.includes('.gif')) {
+    //     return (
+    //     <Avatar src={rowUrl} size='lg'/>
+    //     )
     // }
-
-
-    const retrieveSimple = async () => {
-        const simpleData = await fetch('https://server.appliedhealthinformatics.com/sentances')
-        .then(response => response.json())
-        // catch error
-        .catch(error => console.log(error))
-        .then(data => {
-            console.log('data retrieved: ', data);
-            setSimpleList(data);
-        });
-    }
-
-
-    const PreviewFile = (rowUrl) => {
-    if (rowUrl.includes('.jpg') || rowUrl.includes('.jpeg') || rowUrl.includes('.png') || rowUrl.includes('.gif')) {
-        return (
-        <Avatar src={rowUrl} size='lg'/>
-        )
-    }
-    else if (rowUrl.includes('.wav') || rowUrl.includes('.mp3')) {
-        return (
-        <ReactAudioPlayer src={rowUrl} controls />
-        )
-    }
-    else if (rowUrl.includes('.txt')) {
-        console.log('rowUrl: ', rowUrl);
-        return (
-        <Tag size='sm'> <object data={rowUrl} margin='0'/> </Tag>
-        )
-    }
-    }
+    // else if (rowUrl.includes('.wav') || rowUrl.includes('.mp3')) {
+    //     return (
+    //     <ReactAudioPlayer src={rowUrl} controls />
+    //     )
+    // }
+    // else if (rowUrl.includes('.txt')) {
+    //     console.log('rowUrl: ', rowUrl);
+    //     return (
+    //     <Tag size='sm'> <object data={rowUrl} margin='0'/> </Tag>
+    //     )
+    // }
+    // }
 
 
     useEffect(() => {
         if (loading) return;
         if (!authUser) {Router.push('/connect/login')};
-        firebaseDataretrieve();
         retrieveSimple();
+        firebaseDataretrieve();
     }, [authUser, loading]);
 
 
@@ -218,52 +331,82 @@ function SimpleProcess() {
 
         <Heading size='md'> Simple Voice Processing</Heading>
 
+
+        {checkedRows.length > 0 && (
+            <div>
+                <Button backgroundColor='green.500' mt='10' mr='5' onClick={testSubmitButton}> Submit! (test - manual for now) </Button>
+                <Button backgroundColor='yellow.500' mt='10' onClick={clearSelections}> Clear All Rows</Button>
+            </div>
+        )}
+
+        <br />
+        <br />
+
         {checkedRows.length > 0 && checkedRows.map((item) => {
             return (
                 <div>
                     <Badge colorScheme='green' ml='2'> {item} </Badge>
                 </div>
+                
             )
             }
         )}
         
         <br />
 
-        {checkedRowsValuesUrls.length > 0 && checkedRowsValuesUrls.map((item) => {
+        {/* {checkedRowsValuesUrls.length > 0 && checkedRowsValuesUrls.map((item) => {
             return (
                 <div>
                     <Badge colorScheme='purple' ml='2'> {item} </Badge>
                 </div>
             )
             }
-        )}
+        )} */}
 
-        <br/>
+        {/* <br/>
 
-        {/* if checkedRows is null, turn off test submit button, otherwise have it on */}
         {checkedRows.length > 4 ? (
             <Button backgroundColor='green.500' mt='10' onClick={testSubmitButton}> Test Submit Button </Button>
         ) : (
             <Button mt='10' onClick={testSubmitButton} isDisabled> Submit! Please select at least 5 </Button>
         )}
 
+        <br /> */}
+
         <br />
+
+        {(!allChecked && checkedRows.length < 1 )&& (
+        <Button backgroundColor='orange.500' onClick={selectAllRows}> Select all recordings (default) </Button>
+        )}
+
+        <br />
+
+
+        {/* count of values that will be added */}
+        {/* <div>
+            <br />
+            <p> Selected: </p>
+            <Badge colorScheme='green' ml='2'> {completedList?.length} </Badge>
+        </div> */}
+
+
+
+
+
  
         
 
         <br />
         {allChecked && (
-            <Button onClick={clearSelections}> Clear selections </Button>
+            <Button backgroundColor='yellow.500' onClick={clearSelections}> Clear selections </Button>
         )}
         <br />
 
-        {(!allChecked && checkedRows.length < 1 )&& (
-        <Button onClick={selectAllRows}> Select all rows </Button>
-        )}
+
 
 
     
-        {!allChecked && (
+        {/* {!allChecked && (
             <TableContainer mt='50'>
                 <Table variant='simple' maxWidth='100%' display='block' overflowX='auto'>
                     <Thead>
@@ -290,7 +433,7 @@ function SimpleProcess() {
                     </Tbody>
                 </Table>
             </TableContainer>
-        )}
+        )} */}
 
 
 
