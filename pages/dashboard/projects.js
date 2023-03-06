@@ -1,7 +1,23 @@
+import React, { useEffect } from "react";
+import { useRouter } from 'next/router';
+import { useAuthUserContext } from '../../context/AuthUserContext';
 import { getLayout } from '@/layouts/dashboard';
 
-const DashboardProjects = () => <div>Projects</div>;
+function Projects() {
+  const { authUser, loading } = useAuthUserContext();
+  const Router = useRouter();
 
-DashboardProjects.getLayout = getLayout;
+  useEffect(() => {
+    if (loading) return;
+    if (!authUser) {Router.push('/connect/login')};
+  }, [authUser, loading]);
 
-export default DashboardProjects;
+  return (
+    <div>
+        Logged in and viewing the projects page ...
+    </div>
+  );
+}
+
+Projects.getLayout = getLayout;
+export default Projects;

@@ -1,12 +1,12 @@
 import { Github, Twitter, Mail } from '../components/icons';
 
-export const MY_APP = 'Dashboard';
-export const MY_NAME = 'Faisal Karim';
-export const TWITTER_USER_NAME = 'miraklasiaf';
-export const PLATFORM_URL = 'https://dumbbell.now.sh';
+export const MY_APP = 'Digital Cloner';
+export const MY_NAME = 'Hants Williams';
+export const TWITTER_USER_NAME = 'hants_williams';
+export const PLATFORM_URL = 'https://www.appliedhealthinformatics.com/';
 
 export const links = [
-  [Twitter, 'https://twitter.com/miraklasiaf', 'Twitter'],
-  [Github, 'https://github.com/miraklasiaf', 'Github'],
-  [Mail, 'mailto:faisalkarim96@gmail.com', 'Email']
+  [Twitter, 'https://twitter.com/hants_williams', 'Twitter'],
+  [Github, 'https://github.com/hantswilliams', 'Github'],
+  [Mail, 'mailto:hants.williams@stonybrook.edu', 'Email']
 ];

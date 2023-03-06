@@ -7,9 +7,10 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Button,
   VStack,
   useColorModeValue
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { NavLink } from './nav-link';
 import {
   Home,
@@ -21,8 +22,10 @@ import {
   LogoMark,
   LogoOnDark,
   Template,
-  ClipboardList
+  ClipboardList,
+  Rocketship
 } from '../icons';
+
 
 const SidebarLink = ({ href, children, icon }) => (
   <NavLink href={href}>
@@ -35,16 +38,26 @@ const SidebarLink = ({ href, children, icon }) => (
   </NavLink>
 );
 
+
 function PageLinks() {
   return (
     <VStack w="full" spacing={1}>
       <SidebarLink href="/dashboard" icon={Home}>
         Dashboard
       </SidebarLink>
-      <SidebarLink href="/dashboard/team" icon={UserGroup}>
-        Team
+      <SidebarLink href="/dashboard/media" icon={ChartSquareBar}>
+        Media
       </SidebarLink>
-      <SidebarLink href="/dashboard/projects" icon={Folder}>
+      <SidebarLink href="/dashboard/create" icon={UserGroup}>
+        Create
+      </SidebarLink>
+      <SidebarLink href="/dashboard/tasks" icon={Folder}>
+        Task Queue
+      </SidebarLink>
+      <SidebarLink href="/dashboard/completed" icon={Inbox}>
+        Completed
+      </SidebarLink>
+      {/* <SidebarLink href="/dashboard/projects" icon={Folder}>
         Projects
       </SidebarLink>
       <SidebarLink href="/dashboard/calendar" icon={Calendar}>
@@ -55,7 +68,7 @@ function PageLinks() {
       </SidebarLink>
       <SidebarLink href="/dashboard/reports" icon={ChartSquareBar}>
         Reports
-      </SidebarLink>
+      </SidebarLink> */}
     </VStack>
   );
 }
@@ -75,6 +88,7 @@ function SidebarContainer(props) {
 }
 
 export default function Sidebar(props) {
+
   const bgColor = useColorModeValue('white', 'gray.800');
 
   return (
@@ -83,14 +97,14 @@ export default function Sidebar(props) {
         <Flex boxSize="full" align="center" px={3}>
           <Flex boxSize="full" align="center">
             <Box
-              as={LogoMark}
+              as={Rocketship}
               h={8}
               w="auto"
               display={{ base: 'block', lg: 'none' }}
             />
 
             <Box
-              as={LogoOnDark}
+              as={Rocketship}
               h={8}
               w="auto"
               display={{ base: 'none', lg: 'block' }}

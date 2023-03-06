@@ -1,4 +1,4 @@
-import { Box, useColorModeValue } from '@chakra-ui/core';
+import { Box, useColorModeValue } from '@chakra-ui/react';
 
 const LogoOnDark = (props) => {
   const textColor = useColorModeValue('#161e2e', 'white');

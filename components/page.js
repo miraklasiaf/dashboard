@@ -1,6 +1,6 @@
 import Header from './header';
 import Footer from './footer';
-import { useColorModeValue, Flex } from '@chakra-ui/core';
+import { useColorModeValue, Flex } from '@chakra-ui/react';
 
 export default function Page({ children }) {
   const bgColor = useColorModeValue('white', 'gray.900');

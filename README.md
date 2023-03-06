@@ -1,5 +1,16 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## note to self 
+- if implement react dropzone, remove the `react-hook-form` if it is no longer needed 
+
+## templates 
+- good place to find templates: https://chakra-templates.dev/forms/authentication 
+
+- Multiple with nonDZ: https://www.bezkoder.com/react-hooks-multiple-file-upload/ 
+
+- upload: https://www.bezkoder.com/drag-drop-file-upload-react-hooks/ // https://github.com/bezkoder/drag-drop-file-upload-react-hooks
+- upload without using react dropzone: https://github.com/bezkoder/react-hooks-multiple-file-upload/blob/master/package.json 
+
 ## Getting Started
 
 First, run the development server:

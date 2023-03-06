@@ -1,7 +1,23 @@
+import React, { useEffect } from "react";
+import { useRouter } from 'next/router';
+import { useAuthUserContext } from '../../context/AuthUserContext';
 import { getLayout } from '@/layouts/dashboard';
 
-const DashboardReports = () => <div>Reports</div>;
+function Reports() {
+  const { authUser, loading } = useAuthUserContext();
+  const Router = useRouter();
 
-DashboardReports.getLayout = getLayout;
+  useEffect(() => {
+    if (loading) return;
+    if (!authUser) {Router.push('/connect/login')};
+  }, [authUser, loading]);
 
-export default DashboardReports;
+  return (
+    <div>
+        Logged in and viewing the reports page ...
+    </div>
+  );
+}
+
+Reports.getLayout = getLayout;
+export default Reports;

@@ -1,4 +1,4 @@
-import { Stack, Link, Box, useColorModeValue } from '@chakra-ui/core';
+import { Stack, Link, Box, useColorModeValue } from '@chakra-ui/react';
 import { links } from '@/utils/constants';
 
 export default function Footer() {

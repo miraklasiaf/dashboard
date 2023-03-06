@@ -1,7 +1,23 @@
+import React, { useEffect } from "react";
+import { useRouter } from 'next/router';
+import { useAuthUserContext } from '../../context/AuthUserContext';
 import { getLayout } from '@/layouts/dashboard';
 
-const DashboardCalendar = () => <div>Calendar</div>;
+function Calendar() {
+  const { authUser, loading } = useAuthUserContext();
+  const Router = useRouter();
 
-DashboardCalendar.getLayout = getLayout;
+  useEffect(() => {
+    if (loading) return;
+    if (!authUser) {Router.push('/connect/login')};
+  }, [authUser, loading]);
 
-export default DashboardCalendar;
+  return (
+    <div>
+        Logged in and viewing the calendar page ...
+    </div>
+  );
+}
+
+Calendar.getLayout = getLayout;
+export default Calendar;
